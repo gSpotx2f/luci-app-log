@@ -1,0 +1,89 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+msgid "Alert"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Critical"
+msgstr ""
+
+msgid "Debug"
+msgstr ""
+
+msgid "Download log"
+msgstr ""
+
+msgid "Emergency"
+msgstr ""
+
+msgid "Entries"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Facility"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Invalid regular expression"
+msgstr ""
+
+msgid "Kernel Log"
+msgstr ""
+
+msgid "Last entries"
+msgstr ""
+
+msgid "Level"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "Logging levels"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Message filter"
+msgstr ""
+
+msgid "No entries available..."
+msgstr ""
+
+msgid "Notice"
+msgstr ""
+
+msgid "Sorting entries"
+msgstr ""
+
+msgid "System Log"
+msgstr ""
+
+msgid "Timestamp"
+msgstr ""
+
+msgid "Type an expression..."
+msgstr ""
+
+msgid "Unable to load log data:"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "ascending"
+msgstr ""
+
+msgid "descending"
+msgstr ""

@@ -1,0 +1,25 @@
+{
+	"admin/services/syslog": {
+		"title": "System Log",
+		"order": 20,
+		"action": {
+			"type": "view",
+			"path": "log/syslog"
+		},
+		"depends": {
+			"acl": [ "luci-app-log" ]
+		}
+	},
+
+	"admin/services/dmesg": {
+		"title": "Kernel Log",
+		"order": 21,
+		"action": {
+			"type": "view",
+			"path": "log/dmesg"
+		},
+		"depends": {
+			"acl": [ "luci-app-log" ]
+		}
+	}
+}
