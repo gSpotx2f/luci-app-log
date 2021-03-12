@@ -89,7 +89,7 @@ return L.Class.extend({
 						((e[1]) ? `<div class="td left" data-title="${_('Timestamp')}">${e[1]}</div>` : '') +
 						((e[2]) ? `<div class="td left" data-title="${_('Level')}">${e[2]}</div>` : '') +
 						((e[3]) ? `<div class="td left" data-title="${_('Facility')}">${e[3]}</div>` : '') +
-						((e[4]) ? `<div class="td left" data-title="${_('Message')}">${e[4]}</div>` : '') +
+						((e[4]) ? `<div class="td left log-entry-message-cell" data-title="${_('Message')}">${e[4]}</div>` : '') +
 						`</div>`
 					);
 				});
@@ -227,6 +227,10 @@ return L.Class.extend({
 }
 .log-entry-message {
 	min-width: 25em !important;
+}
+.log-entry-message-cell {
+	overflow-x: hidden !important;
+	text-overflow: ellipsis !important;
 }
 .log-empty {
 }
@@ -412,7 +416,7 @@ return L.Class.extend({
 								E('form', {
 									'id': 'logForm',
 									'name': 'logForm',
-									'style': 'display:inline-block',
+									'style': 'display:inline-block; margin-top:0.5em',
 									'submit': ui.createHandlerFn(this, function(ev) {
 										ev.preventDefault();
 										let formElems = Array.from(document.forms.logForm.elements);
