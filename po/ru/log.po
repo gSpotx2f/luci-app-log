@@ -41,6 +41,9 @@ msgstr "Ошибка"
 msgid "Facility"
 msgstr "Категория"
 
+msgid "Host"
+msgstr "Хост"
+
 msgid "Info"
 msgstr "Информация"
 
@@ -73,6 +76,9 @@ msgstr "Нет доступных записей..."
 
 msgid "Notice"
 msgstr "Сообщение"
+
+msgid "Refresh log"
+msgstr "Обновить лог"
 
 msgid "Sorting entries"
 msgstr "Сортировка записей"

@@ -1,15 +1,27 @@
+'use strict';
 'require fs';
 'require ui';
-'require view.log.baselog as baselog';
+'require view.log.abstract-log as abc';
 
-return baselog.view.extend({
+return abc.view.extend({
 	viewName: 'dmesg',
 
 	title: _('Kernel Log'),
 
+	logFacilities: [
+		'kern',
+		'user',
+		'mail',
+		'daemon',
+		'auth',
+		'syslog',
+		'lpr',
+		'news',
+	],
+
 	getLogData: function(tail) {
-		return fs.exec_direct('/bin/dmesg', [ '-r' ]).catch(e => {
-			ui.addNotification(null, E('p', {}, _('Unable to load log data: ' + err.message)));
+		return fs.exec_direct('/bin/dmesg', [ '-r' ]).catch(err => {
+			ui.addNotification(null, E('p', {}, _('Unable to load log data:') + ' ' + err.message));
 			return '';
 		});
 	},
@@ -45,6 +57,7 @@ return baselog.view.extend({
 			return [
 				i + 1,													// #			(Number)
 				strArray[1].trim(),										// Timestamp	(String)
+				null,													// Host			(String)
 				level,													// Level		(String)
 				this.logFacilities[facility],							// Facility		(String)
 				this.htmlEntities(strArray.slice(2).join(' ').trim()),	// Message		(String)

@@ -1,8 +1,9 @@
+'use strict';
 'require fs';
 'require ui';
-'require view.log.baselog as baselog';
+'require view.log.abstract-log as abc';
 
-return baselog.view.extend({
+return abc.view.extend({
 	viewName: 'syslog',
 
 	title: _('System Log'),
@@ -19,6 +20,7 @@ return baselog.view.extend({
 		return [
 			lineNum,										// #			(Number)
 			strArray.slice(0, 5).join(' '),					// Timestamp	(String)
+			null,											// Host			(String)
 			logLevel[1],									// Level		(String)
 			logLevel[0],									// Facility		(String)
 			this.htmlEntities(strArray.slice(6).join(' ')),	// Message		(String)
@@ -30,6 +32,7 @@ return baselog.view.extend({
 		return [
 			lineNum,										// #			(Number)
 			strArray.slice(0, 3).join(' '),					// Timestamp	(String)
+			strArray[3],									// Host			(String)
 			null,											// Level		(String)
 			null,											// Facility		(String)
 			this.htmlEntities(strArray.slice(4).join(' ')),	// Message		(String)
@@ -44,8 +47,10 @@ return baselog.view.extend({
 			let logger = (stat[0]) ? stat[0].path : (stat[1]) ? stat[1].path : null;
 
 			if(logger) {
-				return fs.exec_direct(logger, [ '-l', (tail || ' '), '-e', '^' ]).catch(err => {
-					ui.addNotification(null, E('p', {}, _('Unable to load log data: ' + err.message)));
+				let loggerArgs = (tail) ? [ '-l', tail, '-e', '^' ] : [ '-e', '^' ];
+
+				return fs.exec_direct(logger, loggerArgs).catch(err => {
+					ui.addNotification(null, E('p', {}, _('Unable to load log data:') + ' ' + err.message));
 					return '';
 				});
 			};

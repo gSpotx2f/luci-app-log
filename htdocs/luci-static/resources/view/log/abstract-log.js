@@ -1,216 +1,7 @@
 'use strict';
 'require ui';
 
-return L.Class.extend({
-	view: L.view.extend({
-		viewName: null,
-
-		title: null,
-
-		logFacilities: [
-			'kern',
-			'user',
-			'mail',
-			'daemon',
-			'auth',
-			'syslog',
-			'lpr',
-			'news',
-		],
-
-		logLevels: {
-			'emerg':	E('span', { 'class': 'zonebadge log-emerg' }, E('strong', _('Emergency'))),
-			'alert':	E('span', { 'class': 'zonebadge log-alert' }, E('strong', _('Alert'))),
-			'crit':		E('span', { 'class': 'zonebadge log-crit' }, E('strong', _('Critical'))),
-			'err':		E('span', { 'class': 'zonebadge log-err' }, E('strong', _('Error'))),
-			'warn':		E('span', { 'class': 'zonebadge log-warn' }, E('strong', _('Warning'))),
-			'notice':	E('span', { 'class': 'zonebadge log-notice' }, E('strong', _('Notice'))),
-			'info':		E('span', { 'class': 'zonebadge log-info' }, E('strong', _('Info'))),
-			'debug':	E('span', { 'class': 'zonebadge log-debug' }, E('strong', _('Debug'))),
-		},
-
-		tailValue: 25,
-
-		logSortingValue: 'asc',
-
-		logLevelsStat: {},
-
-		logLevelsDropdown: null,
-
-		totalLogLines: 0,
-
-		htmlEntities: function(str) {
-			return String(str).replace(
-				/&/g, '&#38;').replace(
-				/</g, '&#60;').replace(
-				/>/g, '&#62;').replace(
-				/"/g, '&#34;');
-		},
-
-		/**
-		*
-		* @param {number} tail
-		* @returns {string}
-		* Returns the raw content of the log
-		*
-		*/
-		getLogData: function(tail) {
-			throw new Error('getLogData needs to be reloaded in subclass');
-		},
-
-		/**
-		*
-		* @param {string} logdata
-		* @param {number} tail
-		* @returns {Array<number, string|null, string|null, string|null, string|null>}
-		* Returns an array of values: [ #, Timestamp, Level, Facility, Message ]
-		*
-		*/
-		parseLogData: function(logdata, tail) {
-			throw new Error('parseLogData needs to be reloaded in subclass');
-		},
-
-		makeLogArea: function(logdataArray) {
-			let lines = `<div class="tr"><div class="td center log-entry-empty">${_('No entries available...')}</div></div>`;
-			let logTable = E('div', { 'id': 'logTable', 'class': 'table' });
-
-			for(let level of Object.keys(this.logLevels)) {
-				this.logLevelsStat[level] = 0;
-			};
-
-			if(logdataArray.length > 0) {
-				lines = [];
-				logdataArray.forEach((e, i) => {
-					if(e[2] in this.logLevels) {
-						this.logLevelsStat[e[2]] = this.logLevelsStat[e[2]] + 1;
-					};
-
-					lines.push(
-						`<div class="tr log-${e[2] || 'empty'}"><div class="td left" data-title="#">${e[0]}</div>` +
-						((e[1]) ? `<div class="td left" data-title="${_('Timestamp')}">${e[1]}</div>` : '') +
-						((e[2]) ? `<div class="td left" data-title="${_('Level')}">${e[2]}</div>` : '') +
-						((e[3]) ? `<div class="td left" data-title="${_('Facility')}">${e[3]}</div>` : '') +
-						((e[4]) ? `<div class="td left log-entry-message-cell" data-title="${_('Message')}">${e[4]}</div>` : '') +
-						`</div>`
-					);
-				});
-				lines = lines.join('');
-
-				logTable.append(
-					E('div', { 'class': 'tr table-titles' }, [
-						E('div', { 'class': 'th left log-entry-number' }, '#'),
-						(logdataArray[0][1]) ? E('div', { 'class': 'th left log-entry-time' }, _('Timestamp')) : '',
-						(logdataArray[0][2]) ? E('div', { 'class': 'th left log-entry-log-level' }, _('Level')) : '',
-						(logdataArray[0][3]) ? E('div', { 'class': 'th left log-entry-facility' }, _('Facility')) : '',
-						(logdataArray[0][4]) ? E('div', { 'class': 'th left log-entry-message' }, _('Message')) : '',
-					])
-				);
-			};
-
-			try {
-				logTable.insertAdjacentHTML('beforeend', lines);
-			} catch(err) {
-				if(err.name === 'SyntaxError') {
-					ui.addNotification(null,
-						E('p', {}, _('HTML/XML error') + ': ' + err.message), 'error');
-				};
-				throw err;
-			};
-
-			let levelsStatString = '';
-			if((Object.values(this.logLevelsStat).reduce((s,c) => s + c, 0)) > 0) {
-				Object.entries(this.logLevelsStat).forEach(e => {
-					if(e[0] in this.logLevels && e[1] > 0) {
-						levelsStatString += `<span class="log-entries-count-level log-${e[0]}" title="${e[0]}">${e[1]}</span>`;
-					};
-				});
-			};
-
-			return E([
-				E('div', { 'class': 'log-entries-count' },
-					`${_('Entries')}: ${logdataArray.length} / ${this.totalLogLines}${levelsStatString}`
-				),
-				logTable
-			]);
-		},
-
-		setLevelFilter: function(cArr) {
-			let logLevelsKeys = Object.keys(this.logLevels);
-			if(logLevelsKeys.length > 0) {
-				let selectedLevels = this.logLevelsDropdown.getValue();
-				if(logLevelsKeys.length === selectedLevels.length) {
-					return cArr;
-				};
-				return cArr.filter(s => selectedLevels.length === 0 || selectedLevels.includes(s[2]));
-			};
-			return cArr;
-		},
-
-		setRegexpFilter: function(cArr) {
-			let fPattern = document.getElementById('logFilter').value;
-			if(!fPattern) {
-				return cArr;
-			};
-			let fArr = [];
-			try {
-				let regExp = new RegExp(`(${fPattern})`, 'giu');
-				cArr.forEach((e, i) => {
-					if(regExp.test(e[4])) {
-						e[4] = e[4].replace(regExp, '<span class="log-highlight-item">$1</span>');
-						fArr.push(e);
-					};
-				});
-			} catch(err) {
-				if(err.name === 'SyntaxError') {
-					ui.addNotification(null,
-						E('p', {}, _('Invalid regular expression') + ': ' + err.message));
-					return cArr;
-				} else {
-					throw err;
-				};
-			};
-			return fArr;
-		},
-
-		downloadLog: function(ev) {
-			let formElems = Array.from(document.forms.logForm.elements);
-			formElems.forEach(e => e.disabled = true);
-
-			return this.getLogData(0).then(logdata => {
-				logdata = logdata || '';
-				let link = E('a', {
-					'download': this.viewName + '.log',
-					'href': URL.createObjectURL(
-						new Blob([ logdata ], { type: 'text/plain' })),
-				});
-				link.click();
-				URL.revokeObjectURL(link.href);
-			}).catch(() => {
-				ui.addNotification(null,
-					E('p', {}, _('Download error') + ': ' + err.message));
-			}).finally(() => {
-				formElems.forEach(e => e.disabled = false);
-			});
-		},
-
-		load: function() {
-
-			// Restoring settings from localStorage
-			let tailValueLocal = localStorage.getItem(`luci-app-${this.viewName}-tailValue`);
-			if(tailValueLocal) {
-				this.tailValue = Number(tailValueLocal);
-			};
-			let logSortingLocal = localStorage.getItem(`luci-app-${this.viewName}-logSorting`);
-			if(logSortingLocal) {
-				this.logSortingValue = logSortingLocal;
-			};
-
-			return this.getLogData(this.tailValue);
-		},
-
-		render: function(logdata) {
-
-			document.head.append(E('style', {'type': 'text/css'},
+document.head.append(E('style', {'type': 'text/css'},
 `
 .log-entry-empty {
 }
@@ -219,6 +10,13 @@ return L.Class.extend({
 }
 .log-entry-time {
 	min-width: 14em !important;
+}
+.log-entry-host {
+	min-width: 10em !important;
+}
+.log-entry-host-cell {
+	word-break: break-all !important;
+	word-wrap: break-word !important;
 }
 .log-entry-log-level {
 	max-width: 5em !important;
@@ -239,9 +37,21 @@ return L.Class.extend({
 	background-color: #a93734 !important;
 	color: #fff;
 }
+log-emerg .td {
+	color: #fff !important;
+}
+log-emerg td {
+	color: #fff !important;
+}
 .log-alert {
 	background-color: #ff7968 !important;
 	color: #fff;
+}
+.log-alert .td {
+	color: #fff !important;
+}
+.log-alert td {
+	color: #fff !important;
 }
 .log-crit {
 	background-color: #fcc3bf !important;
@@ -278,9 +88,207 @@ return L.Class.extend({
 	border: 1px solid #ccc;
 	font-weight: normal;
 }
-`
-			));
+`));
 
+return L.Class.extend({
+	view: L.view.extend({
+		viewName: null,
+
+		title: null,
+
+		logLevels: {
+			'emerg':	E('span', { 'class': 'zonebadge log-emerg' }, E('strong', _('Emergency'))),
+			'alert':	E('span', { 'class': 'zonebadge log-alert' }, E('strong', _('Alert'))),
+			'crit':		E('span', { 'class': 'zonebadge log-crit' }, E('strong', _('Critical'))),
+			'err':		E('span', { 'class': 'zonebadge log-err' }, E('strong', _('Error'))),
+			'warn':		E('span', { 'class': 'zonebadge log-warn' }, E('strong', _('Warning'))),
+			'notice':	E('span', { 'class': 'zonebadge log-notice' }, E('strong', _('Notice'))),
+			'info':		E('span', { 'class': 'zonebadge log-info' }, E('strong', _('Info'))),
+			'debug':	E('span', { 'class': 'zonebadge log-debug' }, E('strong', _('Debug'))),
+		},
+
+		tailValue: 25,
+
+		logSortingValue: 'asc',
+
+		logLevelsStat: {},
+
+		logLevelsDropdown: null,
+
+		totalLogLines: 0,
+
+		htmlEntities: function(str) {
+			return String(str).replace(
+				/&/g, '&#38;').replace(
+				/</g, '&#60;').replace(
+				/>/g, '&#62;').replace(
+				/"/g, '&#34;').replace(
+				/'/g, '&#39;');
+		},
+
+		/**
+		*
+		* @param {number} tail
+		* @returns {string}
+		* Returns the raw content of the log
+		*
+		*/
+		getLogData: function(tail) {
+			throw new Error('getLogData must be overridden by a subclass');
+		},
+
+		/**
+		*
+		* @param {string} logdata
+		* @param {number} tail
+		* @returns {Array<number, string|null, string|null, string|null, string|null, string|null>}
+		* Returns an array of values: [ #, Timestamp, Host, Level, Facility, Message ]
+		*
+		*/
+		parseLogData: function(logdata, tail) {
+			throw new Error('parseLogData must be overridden by a subclass');
+		},
+
+		setLevelFilter: function(cArr) {
+			let logLevelsKeys = Object.keys(this.logLevels);
+			if(logLevelsKeys.length > 0) {
+				let selectedLevels = this.logLevelsDropdown.getValue();
+				if(selectedLevels.length === 0 || logLevelsKeys.length === selectedLevels.length) {
+					return cArr;
+				};
+				return cArr.filter(e => selectedLevels.includes(e[3]));
+			};
+			return cArr;
+		},
+
+		setRegexpFilter: function(cArr) {
+			let fPattern = document.getElementById('logFilter').value;
+			if(!fPattern) {
+				return cArr;
+			};
+			let fArr = [];
+			try {
+				let regExp = new RegExp(`(${fPattern})`, 'giu');
+				cArr.forEach((e, i) => {
+					if(e[5] !== null && regExp.test(e[5])) {
+						e[5] = e[5].replace(regExp, '<span class="log-highlight-item">$1</span>');
+						fArr.push(e);
+					};
+				});
+			} catch(err) {
+				if(err.name === 'SyntaxError') {
+					ui.addNotification(null,
+						E('p', {}, _('Invalid regular expression') + ': ' + err.message));
+					return cArr;
+				} else {
+					throw err;
+				};
+			};
+			return fArr;
+		},
+
+		makeLogArea: function(logdataArray) {
+			let lines = `<div class="tr"><div class="td center log-entry-empty">${_('No entries available...')}</div></div>`;
+			let logTable = E('div', { 'id': 'logTable', 'class': 'table' });
+
+			for(let level of Object.keys(this.logLevels)) {
+				this.logLevelsStat[level] = 0;
+			};
+
+			if(logdataArray.length > 0) {
+				lines = [];
+				logdataArray.forEach((e, i) => {
+					if(e[3] in this.logLevels) {
+						this.logLevelsStat[e[3]] = this.logLevelsStat[e[3]] + 1;
+					};
+
+					lines.push(
+						`<div class="tr log-${e[3] || 'empty'}"><div class="td left" data-title="#">${e[0]}</div>` +
+						((e[1]) ? `<div class="td left" data-title="${_('Timestamp')}">${e[1]}</div>` : '') +
+						((e[2]) ? `<div class="td left log-entry-host-cell" data-title="${_('Host')}">${e[2]}</div>` : '') +
+						((e[3]) ? `<div class="td left" data-title="${_('Level')}">${e[3]}</div>` : '') +
+						((e[4]) ? `<div class="td left" data-title="${_('Facility')}">${e[4]}</div>` : '') +
+						((e[5]) ? `<div class="td left log-entry-message-cell" data-title="${_('Message')}">${e[5]}</div>` : '') +
+						`</div>`
+					);
+				});
+				lines = lines.join('');
+
+				logTable.append(
+					E('div', { 'class': 'tr table-titles' }, [
+						E('div', { 'class': 'th left log-entry-number' }, '#'),
+						(logdataArray[0][1]) ? E('div', { 'class': 'th left log-entry-time' }, _('Timestamp')) : '',
+						(logdataArray[0][2]) ? E('div', { 'class': 'th left log-entry-host' }, _('Host')) : '',
+						(logdataArray[0][3]) ? E('div', { 'class': 'th left log-entry-log-level' }, _('Level')) : '',
+						(logdataArray[0][4]) ? E('div', { 'class': 'th left log-entry-facility' }, _('Facility')) : '',
+						(logdataArray[0][5]) ? E('div', { 'class': 'th left log-entry-message' }, _('Message')) : '',
+					])
+				);
+			};
+
+			try {
+				logTable.insertAdjacentHTML('beforeend', lines);
+			} catch(err) {
+				if(err.name === 'SyntaxError') {
+					ui.addNotification(null,
+						E('p', {}, _('HTML/XML error') + ': ' + err.message), 'error');
+				};
+				throw err;
+			};
+
+			let levelsStatString = '';
+			if((Object.values(this.logLevelsStat).reduce((s,c) => s + c, 0)) > 0) {
+				Object.entries(this.logLevelsStat).forEach(e => {
+					if(e[0] in this.logLevels && e[1] > 0) {
+						levelsStatString += `<span class="log-entries-count-level log-${e[0]}" title="${e[0]}">${e[1]}</span>`;
+					};
+				});
+			};
+
+			return E([
+				E('div', { 'class': 'log-entries-count' },
+					`${_('Entries')}: ${logdataArray.length} / ${this.totalLogLines}${levelsStatString}`
+				),
+				logTable
+			]);
+		},
+
+		downloadLog: function(ev) {
+			let formElems = Array.from(document.forms.logForm.elements);
+			formElems.forEach(e => e.disabled = true);
+
+			return this.getLogData(0).then(logdata => {
+				logdata = logdata || '';
+				let link = E('a', {
+					'download': this.viewName + '.log',
+					'href': URL.createObjectURL(
+						new Blob([ logdata ], { type: 'text/plain' })),
+				});
+				link.click();
+				URL.revokeObjectURL(link.href);
+			}).catch(() => {
+				ui.addNotification(null,
+					E('p', {}, _('Download error') + ': ' + err.message));
+			}).finally(() => {
+				formElems.forEach(e => e.disabled = false);
+			});
+		},
+
+		load: function() {
+			// Restoring settings from localStorage
+			let tailValueLocal = localStorage.getItem(`luci-app-${this.viewName}-tailValue`);
+			if(tailValueLocal) {
+				this.tailValue = Number(tailValueLocal);
+			};
+			let logSortingLocal = localStorage.getItem(`luci-app-${this.viewName}-logSorting`);
+			if(logSortingLocal) {
+				this.logSortingValue = logSortingLocal;
+			};
+
+			return this.getLogData(this.tailValue);
+		},
+
+		render: function(logdata) {
 			let logWrapper = E('div', {
 				'id': 'logWrapper',
 				'style': 'width:100%; min-height:20em; padding: 0 0 0 45px; font-size:0.9em !important'
@@ -414,7 +422,7 @@ return L.Class.extend({
 							E('label', {
 								'class': 'cbi-value-title',
 								'for': 'logFilter',
-							}),
+							}, _('Refresh log')),
 							E('div', { 'class': 'cbi-value-field' }, [
 								logFormSubmitBtn,
 								E('form', {

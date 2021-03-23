@@ -4,8 +4,8 @@
 		"read": {
 			"cgi-io": [ "exec" ],
 			"file": {
-				"/sbin/logread -l [0-9 ]* -e ^": [ "exec" ],
-				"/usr/sbin/logread -l [0-9 ]* -e ^": [ "exec" ],
+				"/sbin/logread*": [ "exec" ],
+				"/usr/sbin/logread*": [ "exec" ],
 				"/bin/dmesg -r": [ "exec" ]
 			}
 		}
