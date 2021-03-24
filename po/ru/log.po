@@ -44,6 +44,9 @@ msgstr "Категория"
 msgid "Host"
 msgstr "Хост"
 
+msgid "Hosts"
+msgstr "Хосты"
+
 msgid "Info"
 msgstr "Информация"
 

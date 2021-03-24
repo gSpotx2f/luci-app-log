@@ -34,6 +34,9 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
+msgid "Hosts"
+msgstr ""
+
 msgid "Info"
 msgstr ""
 

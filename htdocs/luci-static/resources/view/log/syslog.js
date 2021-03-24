@@ -29,6 +29,10 @@ return abc.view.extend({
 
 	// syslog-ng
 	syslog_ngHandler: function(strArray, lineNum) {
+		if(!(strArray[3] in this.logHosts)) {
+			this.logHosts[strArray[3]] = this.makelogHostsDropdownItem(strArray[3]);
+		};
+
 		return [
 			lineNum,										// #			(Number)
 			strArray.slice(0, 3).join(' '),					// Timestamp	(String)

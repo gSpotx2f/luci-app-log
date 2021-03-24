@@ -88,6 +88,8 @@ log-emerg td {
 	border: 1px solid #ccc;
 	font-weight: normal;
 }
+.log-host-dropdown-item {
+}
 `));
 
 return L.Class.extend({
@@ -113,6 +115,10 @@ return L.Class.extend({
 
 		logLevelsStat: {},
 
+		logHosts: {},
+
+		logHostsDropdown: null,
+
 		logLevelsDropdown: null,
 
 		totalLogLines: 0,
@@ -124,6 +130,14 @@ return L.Class.extend({
 				/>/g, '&#62;').replace(
 				/"/g, '&#34;').replace(
 				/'/g, '&#39;');
+		},
+
+		makelogHostsDropdownItem: function(host) {
+			return E(
+				'span',
+				{ 'class': 'zonebadge log-host-dropdown-item' },
+				E('strong', host)
+			);
 		},
 
 		/**
@@ -147,6 +161,19 @@ return L.Class.extend({
 		*/
 		parseLogData: function(logdata, tail) {
 			throw new Error('parseLogData must be overridden by a subclass');
+		},
+
+		setHostFilter: function(cArr) {
+			let logHostsKeys = Object.keys(this.logHosts);
+			if(logHostsKeys.length > 0) {
+				let selectedHosts = this.logHostsDropdown.getValue();
+				this.logHostsDropdown.addChoices(Object.keys(this.logHosts), this.logHosts);
+				if(selectedHosts.length === 0 || logHostsKeys.length === selectedHosts.length) {
+					return cArr;
+				};
+				return cArr.filter(e => selectedHosts.includes(e[2]));
+			};
+			return cArr;
 		},
 
 		setLevelFilter: function(cArr) {
@@ -319,6 +346,31 @@ return L.Class.extend({
 				'style': 'max-width:4em !important',
 			});
 
+			let logHostsDropdownElem = '';
+			let logHostsKeys = Object.keys(this.logHosts);
+			if(logHostsKeys.length > 0) {
+				this.logHostsDropdown = new ui.Dropdown(
+					null,
+					this.logHosts,
+					{
+						id: 'logHostsDropdown',
+						multiple: true,
+						select_placeholder: _('All'),
+					}
+				);
+				logHostsDropdownElem = E(
+					'div', { 'class': 'cbi-value' }, [
+						E('label', {
+							'class': 'cbi-value-title',
+							'for': 'logHostsDropdown',
+						}, _('Hosts')),
+						E('div', { 'class': 'cbi-value-field' },
+							this.logHostsDropdown.render()
+						),
+					]
+				);
+			};
+
 			let logLevelsDropdownElem = '';
 			let logLevelsKeys = Object.keys(this.logLevels);
 			if(logLevelsKeys.length > 0) {
@@ -330,8 +382,6 @@ return L.Class.extend({
 						sort: logLevelsKeys,
 						multiple: true,
 						select_placeholder: _('All'),
-						display_items: 3,
-						dropdown_items: -1,
 					}
 				);
 				logLevelsDropdownElem = E(
@@ -400,6 +450,7 @@ return L.Class.extend({
 							]),
 						]),
 
+						logHostsDropdownElem,
 						logLevelsDropdownElem,
 
 						E('div', { 'class': 'cbi-value' }, [
@@ -450,18 +501,18 @@ return L.Class.extend({
 										let tail = (tailInput.value && tailInput.value > 0) ? tailInput.value : 0
 										return this.getLogData(tail).then(logdata => {
 											logdata = logdata || '';
-
-											let loglines = this.makeLogArea(
-												this.setRegexpFilter(
-													this.setLevelFilter(
-														this.parseLogData(logdata, tail)
+											logWrapper.innerHTML = '';
+											logWrapper.append(
+												this.makeLogArea(
+													this.setRegexpFilter(
+														this.setLevelFilter(
+															this.setHostFilter(
+																this.parseLogData(logdata, tail)
+															)
+														)
 													)
 												)
 											);
-
-											logWrapper.innerHTML = '';
-											logWrapper.append(loglines);
-
 										}).finally(() => {
 											formElems.forEach(e => e.disabled = false);
 											logDownloadBtn.disabled = false;
