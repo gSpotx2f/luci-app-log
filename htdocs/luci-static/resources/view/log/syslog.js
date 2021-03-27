@@ -30,7 +30,7 @@ return abc.view.extend({
 	// syslog-ng
 	syslog_ngHandler: function(strArray, lineNum) {
 		if(!(strArray[3] in this.logHosts)) {
-			this.logHosts[strArray[3]] = this.makelogHostsDropdownItem(strArray[3]);
+			this.logHosts[strArray[3]] = this.makeLogHostsDropdownItem(strArray[3]);
 		};
 
 		return [
@@ -78,9 +78,11 @@ return abc.view.extend({
 				 * If it contains time then syslog-ng.
 				*/
 				if(this.testRegexp.test(strArray[2])) {
+					this.isHosts = true;
 					this.logLevels = {};
 					this.entriesHandler = this.syslog_ngHandler;
 				} else {
+					this.isLevels = true;
 					this.entriesHandler = this.logdHandler;
 				};
 				this.isLoggerChecked = true;

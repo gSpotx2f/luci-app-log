@@ -30,6 +30,7 @@ return abc.view.extend({
 		if(!logdata) {
 			return [];
 		};
+		this.isLevels = true;
 
 		let strings = logdata.trim().split(/\n/).map(line => line.replace(/^<(\d+)>/, '$1'));
 
