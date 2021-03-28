@@ -1,0 +1,67 @@
+{
+	"admin/services/log": {
+		"title": "Log",
+		"order": 22,
+		"action": {
+			"type": "alias",
+			"path": "admin/services/log/messages"
+		},
+		"depends": {
+			"acl": [ "luci-app-log" ]
+		}
+	},
+
+	"admin/services/log/messages": {
+		"title": "messages",
+		"order": 10,
+		"action": {
+			"type": "view",
+			"path": "log/multilog/messages"
+		}
+	},
+
+	"admin/services/log/secure": {
+		"title": "secure",
+		"order": 20,
+		"action": {
+			"type": "view",
+			"path": "log/multilog/secure"
+		}
+	},
+
+	"admin/services/log/maillog": {
+		"title": "maillog",
+		"order": 30,
+		"action": {
+			"type": "view",
+			"path": "log/multilog/maillog"
+		}
+	},
+
+	"admin/services/log/cron": {
+		"title": "cron",
+		"order": 40,
+		"action": {
+			"type": "view",
+			"path": "log/multilog/cron"
+		}
+	},
+
+	"admin/services/log/boot": {
+		"title": "boot",
+		"order": 50,
+		"action": {
+			"type": "view",
+			"path": "log/multilog/boot"
+		}
+	},
+
+		"admin/services/log/dmesg": {
+		"title": "kernel",
+		"order": 60,
+		"action": {
+			"type": "view",
+			"path": "log/dmesg"
+		}
+	}
+}

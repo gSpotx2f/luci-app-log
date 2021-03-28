@@ -96,7 +96,7 @@ return L.Class.extend({
 	view: L.view.extend({
 
 		/**
-		 * View name (for local storage).
+		 * View name (for local storage and downloads).
 		 * Must be overridden by a subclass!
 		*/
 		viewName: null,
@@ -338,7 +338,7 @@ return L.Class.extend({
 				E('div', { 'class': 'log-entries-count' },
 					`${_('Entries')}: ${logdataArray.length} / ${this.totalLogLines}${levelsStatString}`
 				),
-				logTable
+				logTable,
 			]);
 		},
 

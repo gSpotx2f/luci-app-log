@@ -1,0 +1,18 @@
+{
+	"luci-app-log": {
+		"description": "Grant access to log procedures",
+		"read": {
+			"cgi-io": [ "exec" ],
+			"file": {
+				"/sbin/logread*": [ "exec" ],
+				"/usr/sbin/logread*": [ "exec" ],
+				"/bin/dmesg -r": [ "exec" ],
+				"/var/log/messages": [ "read" ],
+				"/var/log/secure": [ "read" ],
+				"/var/log/maillog": [ "read" ],
+				"/var/log/cron": [ "read" ],
+				"/var/log/boot.log": [ "read" ]
+			}
+		}
+	}
+}
