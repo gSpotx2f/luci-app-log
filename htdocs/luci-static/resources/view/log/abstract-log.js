@@ -250,6 +250,10 @@ return L.Class.extend({
 			return cArr;
 		},
 
+		regexpFilterHighlightFunc: function(match) {
+			return `<span class="log-highlight-item">${match}</span>`;
+		},
+
 		setRegexpFilter: function(cArr) {
 			let fPattern = document.getElementById('logFilter').value;
 			if(!fPattern) {
@@ -257,12 +261,15 @@ return L.Class.extend({
 			};
 			let fArr = [];
 			try {
-				let regExp = new RegExp(`(${fPattern})`, 'giu');
+				let regExp = new RegExp(fPattern, 'giu');
 				cArr.forEach((e, i) => {
 					if(e[5] !== null && regExp.test(e[5])) {
-						e[5] = e[5].replace(regExp, '<span class="log-highlight-item">$1</span>');
+						if(this.regexpFilterHighlightFunc) {
+							e[5] = e[5].replace(regExp, this.regexpFilterHighlightFunc);
+						};
 						fArr.push(e);
 					};
+					regExp.lastIndex = 0;
 				});
 			} catch(err) {
 				if(err.name === 'SyntaxError') {

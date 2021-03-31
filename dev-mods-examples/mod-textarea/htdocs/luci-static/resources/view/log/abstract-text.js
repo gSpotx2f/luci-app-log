@@ -7,6 +7,11 @@ return L.Class.extend({
 	view: abc.view.extend({
 		rowsDefault: 20,
 
+		//regexpFilterHighlightFunc: null,
+		regexpFilterHighlightFunc: function(match) {
+			return `►${match}◄`;
+		},
+
 		padNumber: function(number, length) {
 			try {
 				number = String(number).padStart(length, ' ');
@@ -16,31 +21,6 @@ return L.Class.extend({
 				};
 			};
 			return number;
-		},
-
-		setRegexpFilter: function(cArr) {
-			let fPattern = document.getElementById('logFilter').value;
-			if(!fPattern) {
-				return cArr;
-			};
-			let fArr = [];
-			try {
-				let regExp = new RegExp(`(${fPattern})`, 'giu');
-				cArr.forEach((e, i) => {
-					if(e[5] !== null && regExp.test(e[5])) {
-						fArr.push(e);
-					};
-				});
-			} catch(err) {
-				if(err.name === 'SyntaxError') {
-					ui.addNotification(null,
-						E('p', {}, _('Invalid regular expression') + ': ' + err.message));
-					return cArr;
-				} else {
-					throw err;
-				};
-			};
-			return fArr;
 		},
 
 		makeLogArea: function(logdataArray) {
