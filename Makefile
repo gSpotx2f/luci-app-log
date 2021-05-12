@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_VERSION:=0.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 LUCI_TITLE:=Advanced syslog and kernel log (tail, search, etc)
 LUCI_DEPENDS:=+luci-mod-admin-full
 LUCI_PKGARCH:=all

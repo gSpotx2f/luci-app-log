@@ -9,7 +9,7 @@ document.head.append(E('style', {'type': 'text/css'},
 	min-width: 4em !important;
 }
 .log-entry-time {
-	min-width: 14em !important;
+	min-width: 15em !important;
 }
 .log-entry-host {
 	min-width: 10em !important;
