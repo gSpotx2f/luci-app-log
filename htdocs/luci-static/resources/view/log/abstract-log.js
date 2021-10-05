@@ -3,6 +3,11 @@
 
 document.head.append(E('style', {'type': 'text/css'},
 `
+:root {
+	--dark-font-color: #2e2e2e;
+	--light-font-color: #fff;
+	--debug-font-color: #737373;
+}
 .log-entry-empty {
 }
 .log-entry-number {
@@ -35,40 +40,75 @@ document.head.append(E('style', {'type': 'text/css'},
 }
 .log-emerg {
 	background-color: #a93734 !important;
-	color: #fff;
+	color: var(--light-font-color);
 }
 log-emerg .td {
-	color: #fff !important;
+	color: var(--light-font-color) !important;
 }
 log-emerg td {
-	color: #fff !important;
+	color: var(--light-font-color) !important;
 }
 .log-alert {
 	background-color: #ff7968 !important;
-	color: #fff;
+	color: var(--light-font-color);
 }
 .log-alert .td {
-	color: #fff !important;
+	color: var(--light-font-color) !important;
 }
 .log-alert td {
-	color: #fff !important;
+	color: var(--light-font-color) !important;
 }
 .log-crit {
 	background-color: #fcc3bf !important;
+	color: var(--dark-font-color) !important;
+}
+.log-crit .td {
+	color: var(--dark-font-color) !important;
+}
+.log-crit td {
+	color: var(--dark-font-color) !important;
 }
 .log-err {
 	background-color: #ffe9e8 !important;
+	color: var(--dark-font-color) !important;
+}
+.log-err .td {
+	color: var(--dark-font-color) !important;
+}
+.log-err td {
+	color: var(--dark-font-color) !important;
 }
 .log-warn {
 	background-color: #fff7e2 !important;
+	color: var(--dark-font-color) !important;
+}
+.log-warn .td {
+	color: var(--dark-font-color) !important;
+}
+.log-warn td {
+	color: var(--dark-font-color) !important;
 }
 .log-notice {
 	background-color: #e3ffec !important;
+	color: var(--dark-font-color) !important;
+}
+.log-notice .td {
+	color: var(--dark-font-color) !important;
+}
+.log-notice td {
+	color: var(--dark-font-color) !important;
 }
 .log-info {
 }
 .log-debug {
 	background-color: #ebf6ff !important;
+	color: var(--debug-font-color) !important;
+}
+.log-debug .td {
+	color: var(--debug-font-color) !important;
+}
+.log-debug td {
+	color: var(--debug-font-color) !important;
 }
 .log-highlight-item {
 	background-color: #ffef00;
@@ -76,7 +116,7 @@ log-emerg td {
 .log-entries-count {
 	margin: 0 0 5px 5px;
 	font-weight: bold;
-	opacity: 0.6;
+	opacity: 0.7;
 }
 .log-entries-count-level {
 	display: inline-block !important;
