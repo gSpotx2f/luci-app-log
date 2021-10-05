@@ -4,9 +4,9 @@
 document.head.append(E('style', {'type': 'text/css'},
 `
 :root {
-	--dark-font-color: #2e2e2e;
-	--light-font-color: #fff;
-	--debug-font-color: #737373;
+	--app-log-dark-font-color: #2e2e2e;
+	--app-log-light-font-color: #fff;
+	--app-log-debug-font-color: #737373;
 }
 .log-entry-empty {
 }
@@ -40,75 +40,75 @@ document.head.append(E('style', {'type': 'text/css'},
 }
 .log-emerg {
 	background-color: #a93734 !important;
-	color: var(--light-font-color);
+	color: var(--app-log-light-font-color);
 }
 log-emerg .td {
-	color: var(--light-font-color) !important;
+	color: var(--app-log-light-font-color) !important;
 }
 log-emerg td {
-	color: var(--light-font-color) !important;
+	color: var(--app-log-light-font-color) !important;
 }
 .log-alert {
 	background-color: #ff7968 !important;
-	color: var(--light-font-color);
+	color: var(--app-log-light-font-color);
 }
 .log-alert .td {
-	color: var(--light-font-color) !important;
+	color: var(--app-log-light-font-color) !important;
 }
 .log-alert td {
-	color: var(--light-font-color) !important;
+	color: var(--app-log-light-font-color) !important;
 }
 .log-crit {
 	background-color: #fcc3bf !important;
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-crit .td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-crit td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-err {
 	background-color: #ffe9e8 !important;
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-err .td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-err td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-warn {
 	background-color: #fff7e2 !important;
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-warn .td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-warn td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-notice {
 	background-color: #e3ffec !important;
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-notice .td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-notice td {
-	color: var(--dark-font-color) !important;
+	color: var(--app-log-dark-font-color) !important;
 }
 .log-info {
 }
 .log-debug {
 	background-color: #ebf6ff !important;
-	color: var(--debug-font-color) !important;
+	color: var(--app-log-debug-font-color) !important;
 }
 .log-debug .td {
-	color: var(--debug-font-color) !important;
+	color: var(--app-log-debug-font-color) !important;
 }
 .log-debug td {
-	color: var(--debug-font-color) !important;
+	color: var(--app-log-debug-font-color) !important;
 }
 .log-highlight-item {
 	background-color: #ffef00;
