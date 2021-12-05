@@ -1,28 +1,29 @@
 'use strict';
+'require baseclass';
 'require fs';
 'require ui';
 'require view.log.abstract-log as abc';
 
-return L.Class.extend({
+return baseclass.extend({
 	view: abc.view.extend({
-		testRegexp: new RegExp(/([0-9]{2}:){2}[0-9]{2}/),
+		testRegexp     : new RegExp(/([0-9]{2}:){2}[0-9]{2}/),
 
 		isLoggerChecked: false,
 
-		entriesHandler: null,
+		entriesHandler : null,
 
-		logFile: null,
+		logFile        : null,
 
 		// logd
 		logdHandler: function(strArray, lineNum) {
 			let logLevel = strArray[5].split('.');
 			return [
-				lineNum,										// #			(Number)
-				strArray.slice(0, 5).join(' '),					// Timestamp	(String)
-				null,											// Host			(String)
-				logLevel[1],									// Level		(String)
-				logLevel[0],									// Facility		(String)
-				this.htmlEntities(strArray.slice(6).join(' ')),	// Message		(String)
+				lineNum,                                        // #         (Number)
+				strArray.slice(0, 5).join(' '),                 // Timestamp (String)
+				null,                                           // Host      (String)
+				logLevel[1],                                    // Level     (String)
+				logLevel[0],                                    // Facility  (String)
+				this.htmlEntities(strArray.slice(6).join(' ')), // Message   (String)
 			];
 		},
 
@@ -33,12 +34,12 @@ return L.Class.extend({
 			};
 
 			return [
-				lineNum,										// #			(Number)
-				strArray.slice(0, 3).join(' '),					// Timestamp	(String)
-				strArray[3],									// Host			(String)
-				null,											// Level		(String)
-				null,											// Facility		(String)
-				this.htmlEntities(strArray.slice(4).join(' ')),	// Message		(String)
+				lineNum,                                         // #        (Number)
+				strArray.slice(0, 3).join(' '),                 // Timestamp (String)
+				strArray[3],                                    // Host      (String)
+				null,                                           // Level     (String)
+				null,                                           // Facility  (String)
+				this.htmlEntities(strArray.slice(4).join(' ')), // Message   (String)
 			];
 		},
 
@@ -59,8 +60,8 @@ return L.Class.extend({
 
 			this.totalLogLines = strings.length;
 
-			let entriesArray = strings.map((e, i) => {
-				let strArray = e.split(/\s+/);
+			let entriesArray   = strings.map((e, i) => {
+				let strArray   = e.split(/\s+/);
 
 				if(!this.isLoggerChecked) {
 					/**
@@ -68,11 +69,11 @@ return L.Class.extend({
 					 * If it contains time then syslog-ng.
 					*/
 					if(this.testRegexp.test(strArray[2])) {
-						this.isHosts = true;
-						this.logLevels = {};
+						this.isHosts        = true;
+						this.logLevels      = {};
 						this.entriesHandler = this.syslog_ngHandler;
 					} else {
-						this.isLevels = true;
+						this.isLevels       = true;
 						this.entriesHandler = this.logdHandler;
 					};
 					this.isLoggerChecked = true;

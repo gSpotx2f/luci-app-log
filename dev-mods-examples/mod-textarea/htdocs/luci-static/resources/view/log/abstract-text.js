@@ -1,9 +1,10 @@
 'use strict';
+'require baseclass';
 'require fs';
 'require ui';
 'require view.log.abstract-log as abc';
 
-return L.Class.extend({
+return baseclass.extend({
 	view: abc.view.extend({
 		rowsDefault: 20,
 
@@ -24,14 +25,14 @@ return L.Class.extend({
 		},
 
 		makeLogArea: function(logdataArray) {
-			let lines = _('No entries available...');
+			let lines       = _('No entries available...');
 			let logTextarea = E('textarea', {
-				'id': 'syslog',
-				'class': 'cbi-input-textarea',
-				'style': 'width:100% !important; margin-bottom:1em; resize:horizontal; font-size:12px; font-family:monospace !important',
-				'readonly': 'readonly',
-				'wrap': 'off',
-				'rows': this.rowsDefault,
+				'id'        : 'syslog',
+				'class'     : 'cbi-input-textarea',
+				'style'     : 'width:100% !important; margin-bottom:1em; resize:horizontal; font-size:12px; font-family:monospace !important',
+				'readonly'  : 'readonly',
+				'wrap'      : 'off',
+				'rows'      : this.rowsDefault,
 				'spellcheck': 'false',
 			});
 
@@ -47,7 +48,6 @@ return L.Class.extend({
 					if(e[3] in this.logLevels) {
 						this.logLevelsStat[e[3]] = this.logLevelsStat[e[3]] + 1;
 					};
-
 					e[0] = this.padNumber(e[0], String(logdataArray[logdataArrayLen - 1][0]).length);
 					e[5] = '\t' + e[5];
 					lines.push(e.filter(e => (e)).join(' '));
@@ -56,7 +56,7 @@ return L.Class.extend({
 			};
 
 			logTextarea.value = lines;
-			logTextarea.rows = (logdataArrayLen < this.rowsDefault) ? this.rowsDefault : logdataArrayLen;
+			logTextarea.rows  = (logdataArrayLen < this.rowsDefault) ? this.rowsDefault : logdataArrayLen;
 
 			let levelsStatString = '';
 			if((Object.values(this.logLevelsStat).reduce((s,c) => s + c, 0)) > 0) {

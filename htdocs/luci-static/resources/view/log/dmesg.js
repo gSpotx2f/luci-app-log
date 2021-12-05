@@ -4,9 +4,9 @@
 'require view.log.abstract-log as abc';
 
 return abc.view.extend({
-	viewName: 'dmesg',
+	viewName     : 'dmesg',
 
-	title: _('Kernel Log'),
+	title        : _('Kernel Log'),
 
 	logFacilities: [
 		'kern',
@@ -49,19 +49,19 @@ return abc.view.extend({
 			let facility = 0;
 			if(strArray[0].length > 1) {
 				let fieldArray = Number(strArray[0]).toString(8).split('');
-				level = logLevelsTranslate[Number(fieldArray[1])];
-				facility = Number(fieldArray[0]);
+				level          = logLevelsTranslate[Number(fieldArray[1])];
+				facility       = Number(fieldArray[0]);
 			} else {
 				level = logLevelsTranslate[Number(strArray[0]).toString(8)];
 			};
 
 			return [
-				i + 1,													// #			(Number)
-				strArray[1].trim(),										// Timestamp	(String)
-				null,													// Host			(String)
-				level,													// Level		(String)
-				this.logFacilities[facility],							// Facility		(String)
-				this.htmlEntities(strArray.slice(2).join(' ').trim()),	// Message		(String)
+				i + 1,                                                 // #         (Number)
+				strArray[1].trim(),                                    // Timestamp (String)
+				null,                                                  // Host      (String)
+				level,                                                 // Level     (String)
+				this.logFacilities[facility],                          // Facility  (String)
+				this.htmlEntities(strArray.slice(2).join(' ').trim()), // Message   (String)
 			];
 		});
 

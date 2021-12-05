@@ -4,26 +4,26 @@
 'require view.log.abstract-log as abc';
 
 return abc.view.extend({
-	viewName: 'syslog',
+	viewName       : 'syslog',
 
-	title: _('System Log'),
+	title          : _('System Log'),
 
-	testRegexp: new RegExp(/([0-9]{2}:){2}[0-9]{2}/),
+	testRegexp     : new RegExp(/([0-9]{2}:){2}[0-9]{2}/),
 
 	isLoggerChecked: false,
 
-	entriesHandler: null,
+	entriesHandler : null,
 
 	// logd
 	logdHandler: function(strArray, lineNum) {
 		let logLevel = strArray[5].split('.');
 		return [
-			lineNum,										// #			(Number)
-			strArray.slice(0, 5).join(' '),					// Timestamp	(String)
-			null,											// Host			(String)
-			logLevel[1],									// Level		(String)
-			logLevel[0],									// Facility		(String)
-			this.htmlEntities(strArray.slice(6).join(' ')),	// Message		(String)
+			lineNum,                                        // #         (Number)
+			strArray.slice(0, 5).join(' '),                 // Timestamp (String)
+			null,                                           // Host      (String)
+			logLevel[1],                                    // Level     (String)
+			logLevel[0],                                    // Facility  (String)
+			this.htmlEntities(strArray.slice(6).join(' ')), // Message   (String)
 		];
 	},
 
@@ -34,12 +34,12 @@ return abc.view.extend({
 		};
 
 		return [
-			lineNum,										// #			(Number)
-			strArray.slice(0, 3).join(' '),					// Timestamp	(String)
-			strArray[3],									// Host			(String)
-			null,											// Level		(String)
-			null,											// Facility		(String)
-			this.htmlEntities(strArray.slice(4).join(' ')),	// Message		(String)
+			lineNum,                                        // #         (Number)
+			strArray.slice(0, 3).join(' '),                 // Timestamp (String)
+			strArray[3],                                    // Host      (String)
+			null,                                           // Level     (String)
+			null,                                           // Facility  (String)
+			this.htmlEntities(strArray.slice(4).join(' ')), // Message   (String)
 		];
 	},
 
@@ -66,11 +66,11 @@ return abc.view.extend({
 			return [];
 		};
 
-		let strings = logdata.trim().split(/\n/);
+		let strings        = logdata.trim().split(/\n/);
 		this.totalLogLines = strings.length;
 
-		let entriesArray = strings.map((e, i) => {
-			let strArray = e.split(/\s+/);
+		let entriesArray   = strings.map((e, i) => {
+			let strArray   = e.split(/\s+/);
 
 			if(!this.isLoggerChecked) {
 				/**
@@ -78,11 +78,11 @@ return abc.view.extend({
 				 * If it contains time then syslog-ng.
 				*/
 				if(this.testRegexp.test(strArray[2])) {
-					this.isHosts = true;
-					this.logLevels = {};
+					this.isHosts        = true;
+					this.logLevels      = {};
 					this.entriesHandler = this.syslog_ngHandler;
 				} else {
-					this.isLevels = true;
+					this.isLevels       = true;
 					this.entriesHandler = this.logdHandler;
 				};
 				this.isLoggerChecked = true;

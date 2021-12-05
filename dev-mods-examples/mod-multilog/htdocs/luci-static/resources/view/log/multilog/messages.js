@@ -3,6 +3,6 @@
 
 return abc.view.extend({
 	viewName: 'multilog-messages',
-	title: _('Log') + ' - ' + _('messages'),
-	logFile: '/var/log/messages',
+	title   : _('Log') + ' - ' + _('messages'),
+	logFile : '/var/log/messages',
 });

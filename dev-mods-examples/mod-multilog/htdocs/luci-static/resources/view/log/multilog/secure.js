@@ -3,6 +3,6 @@
 
 return abc.view.extend({
 	viewName: 'multilog-secure',
-	title: _('Log') + ' - ' + _('secure'),
-	logFile: '/var/log/secure',
+	title   : _('Log') + ' - ' + _('secure'),
+	logFile : '/var/log/secure',
 });

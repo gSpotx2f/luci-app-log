@@ -3,6 +3,6 @@
 
 return abc.view.extend({
 	viewName: 'multilog-cron',
-	title: _('Log') + ' - ' + _('cron'),
-	logFile: '/var/log/cron',
+	title   : _('Log') + ' - ' + _('cron'),
+	logFile : '/var/log/cron',
 });
