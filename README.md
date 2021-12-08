@@ -3,7 +3,7 @@ Advanced syslog and kernel log (tail, search, etc) for LuCI (OpenWrt webUI).
 
 OpenWrt >= 19.07.
 
-Supported LuCI themes: luci-theme-bootstrap, luci-theme-material.
+Supported LuCI themes: luci-theme-bootstrap, luci-theme-material, luci-theme-openwrt-2020.
 
 ## Installation notes
 
