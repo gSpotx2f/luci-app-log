@@ -1,25 +1,31 @@
 {
-	"admin/services/syslog": {
-		"title": "System Log",
-		"order": 20,
+	"admin/services/log": {
+		"title": "Log",
+		"order": 30,
 		"action": {
-			"type": "view",
-			"path": "log/syslog"
+			"type": "alias",
+			"path": "admin/services/log/syslog"
 		},
 		"depends": {
 			"acl": [ "luci-app-log" ]
 		}
 	},
 
-	"admin/services/dmesg": {
+	"admin/services/log/syslog": {
+		"title": "System Log",
+		"order": 10,
+		"action": {
+			"type": "view",
+			"path": "log/syslog"
+		}
+	},
+
+	"admin/services/log/dmesg": {
 		"title": "Kernel Log",
-		"order": 21,
+		"order": 20,
 		"action": {
 			"type": "view",
 			"path": "log/dmesg"
-		},
-		"depends": {
-			"acl": [ "luci-app-log" ]
 		}
 	}
 }
