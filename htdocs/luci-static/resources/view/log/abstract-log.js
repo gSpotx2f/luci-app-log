@@ -539,7 +539,6 @@ return baseclass.extend({
 						E('div', { 'class': 'cbi-value' }, [
 							E('label', {
 								'class': 'cbi-value-title',
-								'for'  : 'logFilter',
 							}, _('Refresh log')),
 							E('div', { 'class': 'cbi-value-field' }, [
 								logFormSubmitBtn,
