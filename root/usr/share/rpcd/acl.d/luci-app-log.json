@@ -7,6 +7,9 @@
 				"/sbin/logread*": [ "exec" ],
 				"/usr/sbin/logread*": [ "exec" ],
 				"/bin/dmesg -r": [ "exec" ]
+			},
+			"ubus": {
+				"system": [ "info" ]
 			}
 		}
 	}
