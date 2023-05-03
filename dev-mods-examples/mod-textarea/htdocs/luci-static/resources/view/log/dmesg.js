@@ -1,5 +1,6 @@
 'use strict';
 'require fs';
+'require rpc';
 'require ui';
 'require view.log.abstract-text as abc';
 
@@ -19,7 +20,62 @@ return abc.view.extend({
 		'news',
 	],
 
-	getLogData: function(tail) {
+	localtime     : null,
+
+	uptime        : null,
+
+	days          : {
+		0: 'Sun',
+		1: 'Mon',
+		2: 'Tue',
+		3: 'Wed',
+		4: 'Thu',
+		5: 'Fri',
+		6: 'Sat',
+		7: 'Sun',
+	},
+
+	months        : {
+		1:  'Jan',
+		2:  'Feb',
+		3:  'Mar',
+		4:  'Apr',
+		5:  'May',
+		6:  'Jun',
+		7:  'Jul',
+		8:  'Aug',
+		9:  'Sep',
+		10: 'Oct',
+		11: 'Nov',
+		12: 'Dec',
+	},
+
+	callSystemInfo: rpc.declare({
+		object: 'system',
+		method: 'info'
+	}),
+
+	calcDmesgDate : function(t) {
+		if(!this.localtime || !this.uptime) {
+			return t;
+		};
+		let date = new Date((this.localtime - this.uptime + t) * 1000);
+		return '%s %s %d %02d:%02d:%02d %d'.format(
+			this.days[ date.getUTCDay() ],
+			this.months[ date.getUTCMonth() + 1 ],
+			date.getUTCDate(),
+			date.getUTCHours(),
+			date.getUTCMinutes(),
+			date.getUTCSeconds(),
+			date.getUTCFullYear()
+		);
+	},
+
+	getLogData    : async function(tail) {
+		await this.callSystemInfo().then(s => {
+			this.localtime = s.localtime;
+			this.uptime    = s.uptime;
+		}).catch(err => {});
 		return fs.exec_direct('/bin/dmesg', [ '-r' ]).catch(err => {
 			ui.addNotification(null, E('p', {}, _('Unable to load log data:') + ' ' + err.message));
 			return '';
@@ -54,12 +110,12 @@ return abc.view.extend({
 			};
 
 			return [
-				i + 1,                              // #         (Number)
-				strArray[1].trim(),                 // Timestamp (String)
-				null,                               // Host      (String)
-				level,                              // Level     (String)
-				this.logFacilities[facility],       // Facility  (String)
-				strArray.slice(2).join(' ').trim(), // Message   (String)
+				i + 1,                                          // #         (Number)
+				this.calcDmesgDate(Number(strArray[1].trim())), // Timestamp (String)
+				null,                                           // Host      (String)
+				level,                                          // Level     (String)
+				this.logFacilities[facility],                   // Facility  (String)
+				strArray.slice(2).join(' ').trim(),             // Message   (String)
 			];
 		});
 
