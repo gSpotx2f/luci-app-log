@@ -31,6 +31,9 @@ msgstr ""
 msgid "Facility"
 msgstr ""
 
+msgid "Facilities"
+msgstr ""
+
 msgid "Host"
 msgstr ""
 
@@ -82,10 +85,16 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+msgid "Timestamp filter"
+msgstr ""
+
 msgid "Type an expression..."
 msgstr ""
 
 msgid "Unable to load log data:"
+msgstr ""
+
+msgid "Unsupported log format"
 msgstr ""
 
 msgid "Warning"

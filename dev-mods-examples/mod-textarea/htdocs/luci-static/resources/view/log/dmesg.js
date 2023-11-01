@@ -5,11 +5,11 @@
 'require view.log.abstract-text as abc';
 
 return abc.view.extend({
-	viewName     : 'dmesg',
+	viewName      : 'dmesg',
 
-	title        : _('Kernel Log'),
+	title         : _('Kernel Log'),
 
-	logFacilities: [
+	facilityName  : [
 		'kern',
 		'user',
 		'mail',
@@ -55,7 +55,7 @@ return abc.view.extend({
 		method: 'info'
 	}),
 
-	calcDmesgDate : function(t) {
+	calcDmesgDate(t) {
 		if(!this.localtime || !this.uptime) {
 			return t;
 		};
@@ -71,7 +71,7 @@ return abc.view.extend({
 		);
 	},
 
-	getLogData    : async function(tail) {
+	async getLogData(tail) {
 		await this.callSystemInfo().then(s => {
 			this.localtime = s.localtime;
 			this.uptime    = s.uptime;
@@ -82,13 +82,14 @@ return abc.view.extend({
 		});
 	},
 
-	parseLogData: function(logdata, tail) {
+	parseLogData(logdata, tail) {
 		if(!logdata) {
 			return [];
 		};
-		this.isLevels = true;
+		this.isFacilities = true;
+		this.isLevels     = true;
 
-		let strings   = logdata.trim().split(/\n/).map(line => line.replace(/^<(\d+)>/, '$1'));
+		let strings = logdata.trim().split(/\n/).map(line => line.replace(/^<(\d+)>/, '$1'));
 
 		if(tail && tail > 0 && strings) {
 			strings = strings.slice(-tail);
@@ -97,10 +98,12 @@ return abc.view.extend({
 		this.totalLogLines = strings.length;
 
 		let entriesArray = strings.map((e, i) => {
-			let strArray           = e.split(/[\]\[]/);
+			let strArray = e.split(/[\]\[]/);
+
 			let logLevelsTranslate = Object.keys(this.logLevels);
-			let level              = 0;
-			let facility           = 0;
+
+			let level    = 0;
+			let facility = 0;
 			if(strArray[0].length > 1) {
 				let fieldArray = Number(strArray[0]).toString(8).split('');
 				level          = logLevelsTranslate[Number(fieldArray[1])];
@@ -113,8 +116,8 @@ return abc.view.extend({
 				i + 1,                                          // #         (Number)
 				this.calcDmesgDate(Number(strArray[1].trim())), // Timestamp (String)
 				null,                                           // Host      (String)
+				this.facilityName[facility],                    // Facility  (String)
 				level,                                          // Level     (String)
-				this.logFacilities[facility],                   // Facility  (String)
 				strArray.slice(2).join(' ').trim(),             // Message   (String)
 			];
 		});

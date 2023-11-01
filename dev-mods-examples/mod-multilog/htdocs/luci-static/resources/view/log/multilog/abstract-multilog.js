@@ -15,44 +15,45 @@ return baseclass.extend({
 		logFile        : null,
 
 		// logd
-		logdHandler: function(strArray, lineNum) {
+		logdHandler(strArray, lineNum) {
 			let logLevel = strArray[5].split('.');
 			return [
 				lineNum,                                        // #         (Number)
 				strArray.slice(0, 5).join(' '),                 // Timestamp (String)
 				null,                                           // Host      (String)
-				logLevel[1],                                    // Level     (String)
 				logLevel[0],                                    // Facility  (String)
+				logLevel[1],                                    // Level     (String)
 				this.htmlEntities(strArray.slice(6).join(' ')), // Message   (String)
 			];
 		},
 
 		// syslog-ng
-		syslog_ngHandler: function(strArray, lineNum) {
+		syslog_ngHandler(strArray, lineNum) {
 			if(!(strArray[3] in this.logHosts)) {
 				this.logHosts[strArray[3]] = this.makeLogHostsDropdownItem(strArray[3]);
 			};
 
 			return [
-				lineNum,                                         // #        (Number)
+				lineNum,                                        // #        (Number)
 				strArray.slice(0, 3).join(' '),                 // Timestamp (String)
 				strArray[3],                                    // Host      (String)
-				null,                                           // Level     (String)
 				null,                                           // Facility  (String)
+				null,                                           // Level     (String)
 				this.htmlEntities(strArray.slice(4).join(' ')), // Message   (String)
 			];
 		},
 
-		getLogData: function(tail) {
+		getLogData(tail) {
 			return L.resolveDefault(fs.read_direct(this.logFile, 'text'), '');
 		},
 
-		parseLogData: function(logdata, tail) {
+		parseLogData(logdata, tail) {
 			if(!logdata) {
 				return [];
 			};
 
-			let strings = logdata.trim().split(/\n/);
+			let unsupportedLog = false;
+			let strings        = logdata.trim().split(/\n/);
 
 			if(tail && tail > 0 && strings) {
 				strings = strings.slice(-tail);
@@ -65,16 +66,27 @@ return baseclass.extend({
 
 				if(!this.isLoggerChecked) {
 					/**
-					 * Checking the third field of a line.
-					 * If it contains time then syslog-ng.
+					* Checking the fourth field of a line.
+					* If it contains time then logd.
 					*/
-					if(this.testRegexp.test(strArray[2])) {
+					if(this.testRegexp.test(strArray[3])) {
+						this.isFacilities   = true;
+						this.isLevels       = true;
+						this.logHosts       = {};
+						this.entriesHandler = this.logdHandler;
+					}
+					/**
+					* Checking the third field of a line.
+					* If it contains time then syslog-ng.
+					*/
+					else if(this.testRegexp.test(strArray[2])) {
 						this.isHosts        = true;
+						this.logFacilities  = {};
 						this.logLevels      = {};
 						this.entriesHandler = this.syslog_ngHandler;
 					} else {
-						this.isLevels       = true;
-						this.entriesHandler = this.logdHandler;
+						unsupportedLog = true;
+						return;
 					};
 					this.isLoggerChecked = true;
 				};
@@ -82,11 +94,19 @@ return baseclass.extend({
 				return this.entriesHandler(strArray, i + 1);
 			});
 
-			if(this.logSortingValue === 'desc') {
-				entriesArray.reverse();
-			};
+			if(unsupportedLog) {
+				ui.addNotification(
+					null,
+					E('p', {}, _('Unable to load log data:') + ' ' + _('Unsupported log format'))
+				);
+				return [];
+			} else {
+				if(this.logSortingValue === 'desc') {
+					entriesArray.reverse();
+				};
 
-			return entriesArray;
+				return entriesArray;
+			};
 		},
 	}),
 });

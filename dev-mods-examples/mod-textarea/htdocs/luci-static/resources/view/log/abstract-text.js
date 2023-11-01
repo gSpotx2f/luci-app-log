@@ -8,12 +8,12 @@ return baseclass.extend({
 	view: abc.view.extend({
 		rowsDefault: 20,
 
-		//regexpFilterHighlightFunc: null,
-		regexpFilterHighlightFunc: function(match) {
+		regexpFilterHighlightFunc(match) {
 			return `►${match}◄`;
 		},
 
-		padNumber: function(number, length) {
+		padNumber(number, lengthFirst, lengthLast) {
+			let length = Math.max(lengthFirst, lengthLast);
 			try {
 				number = String(number).padStart(length, ' ');
 			} catch(e) {
@@ -24,7 +24,7 @@ return baseclass.extend({
 			return number;
 		},
 
-		makeLogArea: function(logdataArray) {
+		makeLogArea(logdataArray) {
 			let lines       = _('No entries available...');
 			let logTextarea = E('textarea', {
 				'id'        : 'syslog',
@@ -45,10 +45,14 @@ return baseclass.extend({
 			if(logdataArrayLen > 0) {
 				lines = [];
 				logdataArray.forEach((e, i) => {
-					if(e[3] in this.logLevels) {
-						this.logLevelsStat[e[3]] = this.logLevelsStat[e[3]] + 1;
+					if(e[4] in this.logLevels) {
+						this.logLevelsStat[e[4]] = this.logLevelsStat[e[4]] + 1;
 					};
-					e[0] = this.padNumber(e[0], String(logdataArray[logdataArrayLen - 1][0]).length);
+					e[0] = this.padNumber(
+						e[0],
+						String(logdataArray[0][0]).length,
+						String(logdataArray[logdataArrayLen - 1][0]).length
+					);
 					e[5] = '\t' + e[5];
 					lines.push(e.filter(e => (e)).join(' '));
 				});

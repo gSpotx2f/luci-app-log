@@ -41,6 +41,9 @@ msgstr "Ошибка"
 msgid "Facility"
 msgstr "Категория"
 
+msgid "Facilities"
+msgstr "Категории"
+
 msgid "Host"
 msgstr "Хост"
 
@@ -92,11 +95,17 @@ msgstr "Системный журнал"
 msgid "Timestamp"
 msgstr "Время"
 
+msgid "Timestamp filter"
+msgstr "Фильтр даты"
+
 msgid "Type an expression..."
 msgstr "Введите выражение..."
 
 msgid "Unable to load log data:"
 msgstr "Невозможно загрузить данные лога:"
+
+msgid "Unsupported log format"
+msgstr "Неподдерживаемый формат лога"
 
 msgid "Warning"
 msgstr "Внимание"

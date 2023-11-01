@@ -9,7 +9,7 @@ return abc.view.extend({
 
 	title         : _('Kernel Log'),
 
-	logFacilities : [
+	facilityName  : [
 		'kern',
 		'user',
 		'mail',
@@ -55,7 +55,7 @@ return abc.view.extend({
 		method: 'info'
 	}),
 
-	calcDmesgDate : function(t) {
+	calcDmesgDate(t) {
 		if(!this.localtime || !this.uptime) {
 			return t;
 		};
@@ -71,7 +71,7 @@ return abc.view.extend({
 		);
 	},
 
-	getLogData    : async function(tail) {
+	async getLogData(tail) {
 		await this.callSystemInfo().then(s => {
 			this.localtime = s.localtime;
 			this.uptime    = s.uptime;
@@ -82,11 +82,12 @@ return abc.view.extend({
 		});
 	},
 
-	parseLogData  : function(logdata, tail) {
+	parseLogData(logdata, tail) {
 		if(!logdata) {
 			return [];
 		};
-		this.isLevels = true;
+		this.isFacilities = true;
+		this.isLevels     = true;
 
 		let strings = logdata.trim().split(/\n/).map(line => line.replace(/^<(\d+)>/, '$1'));
 
@@ -115,8 +116,8 @@ return abc.view.extend({
 				i + 1,                                                 // #         (Number)
 				this.calcDmesgDate(Number(strArray[1].trim())),        // Timestamp (String)
 				null,                                                  // Host      (String)
+				this.facilityName[ facility ],                         // Facility  (String)
 				level,                                                 // Level     (String)
-				this.logFacilities[ facility ],                        // Facility  (String)
 				this.htmlEntities(strArray.slice(2).join(' ').trim()), // Message   (String)
 			];
 		});

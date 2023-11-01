@@ -15,20 +15,20 @@ return abc.view.extend({
 	entriesHandler : null,
 
 	// logd
-	logdHandler: function(strArray, lineNum) {
+	logdHandler(strArray, lineNum) {
 		let logLevel = strArray[5].split('.');
 		return [
 			lineNum,                                        // #         (Number)
 			strArray.slice(0, 5).join(' '),                 // Timestamp (String)
 			null,                                           // Host      (String)
-			logLevel[1],                                    // Level     (String)
 			logLevel[0],                                    // Facility  (String)
+			logLevel[1],                                    // Level     (String)
 			this.htmlEntities(strArray.slice(6).join(' ')), // Message   (String)
 		];
 	},
 
 	// syslog-ng
-	syslog_ngHandler: function(strArray, lineNum) {
+	syslog_ngHandler(strArray, lineNum) {
 		if(!(strArray[3] in this.logHosts)) {
 			this.logHosts[strArray[3]] = this.makeLogHostsDropdownItem(strArray[3]);
 		};
@@ -37,13 +37,13 @@ return abc.view.extend({
 			lineNum,                                        // #         (Number)
 			strArray.slice(0, 3).join(' '),                 // Timestamp (String)
 			strArray[3],                                    // Host      (String)
-			null,                                           // Level     (String)
 			null,                                           // Facility  (String)
+			null,                                           // Level     (String)
 			this.htmlEntities(strArray.slice(4).join(' ')), // Message   (String)
 		];
 	},
 
-	getLogData: function(tail) {
+	getLogData(tail) {
 		return Promise.all([
 			L.resolveDefault(fs.stat('/sbin/logread'), null),
 			L.resolveDefault(fs.stat('/usr/sbin/logread'), null),
@@ -53,19 +53,22 @@ return abc.view.extend({
 			if(logger) {
 				let loggerArgs = (tail) ? [ '-l', tail, '-e', '^' ] : [ '-e', '^' ];
 
-				return fs.exec_direct(logger, loggerArgs).catch(err => {
-					ui.addNotification(null, E('p', {}, _('Unable to load log data:') + ' ' + err.message));
+				return fs.exec_direct(logger, loggerArgs, 'text').catch(err => {
+					ui.addNotification(
+						null, E('p', {}, _('Unable to load log data:') + ' ' + err.message)
+					);
 					return '';
 				});
 			};
 		});
 	},
 
-	parseLogData: function(logdata, tail) {
+	parseLogData(logdata, tail) {
 		if(!logdata) {
 			return [];
 		};
 
+		let unsupportedLog = false;
 		let strings        = logdata.trim().split(/\n/);
 		this.totalLogLines = strings.length;
 
@@ -74,16 +77,27 @@ return abc.view.extend({
 
 			if(!this.isLoggerChecked) {
 				/**
+				 * Checking the fourth field of a line.
+				 * If it contains time then logd.
+				*/
+				if(this.testRegexp.test(strArray[3])) {
+					this.isFacilities   = true;
+					this.isLevels       = true;
+					this.logHosts       = {};
+					this.entriesHandler = this.logdHandler;
+				}
+				/**
 				 * Checking the third field of a line.
 				 * If it contains time then syslog-ng.
 				*/
-				if(this.testRegexp.test(strArray[2])) {
+				else if(this.testRegexp.test(strArray[2])) {
 					this.isHosts        = true;
+					this.logFacilities  = {};
 					this.logLevels      = {};
 					this.entriesHandler = this.syslog_ngHandler;
 				} else {
-					this.isLevels       = true;
-					this.entriesHandler = this.logdHandler;
+					unsupportedLog = true;
+					return;
 				};
 				this.isLoggerChecked = true;
 			};
@@ -91,10 +105,18 @@ return abc.view.extend({
 			return this.entriesHandler(strArray, i + 1);
 		});
 
-		if(this.logSortingValue === 'desc') {
-			entriesArray.reverse();
-		};
+		if(unsupportedLog) {
+			ui.addNotification(
+				null,
+				E('p', {}, _('Unable to load log data:') + ' ' + _('Unsupported log format'))
+			);
+			return [];
+		} else {
+			if(this.logSortingValue === 'desc') {
+				entriesArray.reverse();
+			};
 
-		return entriesArray;
+			return entriesArray;
+		};
 	},
 });
