@@ -344,6 +344,35 @@ return baseclass.extend({
 			throw new Error('parseLogData must be overridden by a subclass');
 		},
 
+		regexpFilterHighlightFunc(match) {
+			return `<span class="log-highlight-item">${match}</span>`;
+		},
+
+		setRegexpFilter(entriesArray, fieldNum, pattern) {
+			let fArr = [];
+			try {
+				let regExp = new RegExp(pattern, 'giu');
+				entriesArray.forEach((e, i) => {
+					if(e[fieldNum] !== null && regExp.test(e[fieldNum])) {
+						if(this.regexpFilterHighlightFunc) {
+							e[fieldNum] = e[fieldNum].replace(regExp, this.regexpFilterHighlightFunc);
+						};
+						fArr.push(e);
+					};
+					regExp.lastIndex = 0;
+				});
+			} catch(err) {
+				if(err.name === 'SyntaxError') {
+					ui.addNotification(null,
+						E('p', {}, _('Invalid regular expression') + ': ' + err.message));
+					return entriesArray;
+				} else {
+					throw err;
+				};
+			};
+			return fArr;
+		},
+
 		setDateFilter(entriesArray) {
 			let fPattern = document.getElementById('timeFilter').value;
 			if(!fPattern) {
@@ -387,35 +416,6 @@ return baseclass.extend({
 				return entriesArray.filter(e => selectedLevels.includes(e[4]));
 			};
 			return entriesArray;
-		},
-
-		regexpFilterHighlightFunc(match) {
-			return `<span class="log-highlight-item">${match}</span>`;
-		},
-
-		setRegexpFilter(entriesArray, fieldNum, pattern) {
-			let fArr = [];
-			try {
-				let regExp = new RegExp(pattern, 'giu');
-				entriesArray.forEach((e, i) => {
-					if(e[fieldNum] !== null && regExp.test(e[fieldNum])) {
-						if(this.regexpFilterHighlightFunc) {
-							e[fieldNum] = e[fieldNum].replace(regExp, this.regexpFilterHighlightFunc);
-						};
-						fArr.push(e);
-					};
-					regExp.lastIndex = 0;
-				});
-			} catch(err) {
-				if(err.name === 'SyntaxError') {
-					ui.addNotification(null,
-						E('p', {}, _('Invalid regular expression') + ': ' + err.message));
-					return entriesArray;
-				} else {
-					throw err;
-				};
-			};
-			return fArr;
 		},
 
 		setMsgFilter(entriesArray) {

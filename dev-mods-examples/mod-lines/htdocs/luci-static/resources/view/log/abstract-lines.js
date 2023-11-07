@@ -4,13 +4,41 @@
 'require ui';
 'require view.log.abstract-log as abc';
 
+document.head.append(E('style', {'type': 'text/css'},
+`
+:root {
+	--app-log-entry-outline-color: #ccc;
+}
+:root[data-darkmode="true"] {
+	--app-log-entry-outline-color: #555;
+}
+#log-area {
+	width: 100%;
+	height: 100%;
+	overflow: auto !important;
+	margin-bottom: 1em;
+}
+.log-entry-line {
+	display: inline-block;
+	white-space: pre-wrap;
+	text-indent: 8px;
+	margin: 0 0 1px 0;
+	padding: 0 4px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid var(--app-log-entry-outline-color);
+	font-weight: normal;
+	/*font-size: 12px !important;*/
+	font-family: monospace !important;
+}
+`));
+
 return baseclass.extend({
 	view: abc.view.extend({
-		rowsDefault: 20,
 
-		//regexpFilterHighlightFunc: null,
 		regexpFilterHighlightFunc(match) {
-			return `►${match}◄`;
+			return `<span class="log-highlight-item">${match}</span>`;
 		},
 
 		padNumber(number, lengthFirst, lengthLast) {
@@ -26,16 +54,8 @@ return baseclass.extend({
 		},
 
 		makeLogArea(logdataArray) {
-			let lines       = _('No entries available...');
-			let logTextarea = E('textarea', {
-				'id'        : 'syslog',
-				'class'     : 'cbi-input-textarea',
-				'style'     : 'width:100% !important; margin-bottom:1em; resize:horizontal; font-size:12px; font-family:monospace !important',
-				'readonly'  : 'readonly',
-				'wrap'      : 'off',
-				'rows'      : this.rowsDefault,
-				'spellcheck': 'false',
-			});
+			let lines   = `<span class="log-entry-line center" style='width:100%'>${_('No entries available...')}</span>`;
+			let logArea = E('div', {'id': 'log-area'});
 
 			for(let level of Object.keys(this.logLevels)) {
 				this.logLevelsStat[level] = 0;
@@ -43,7 +63,7 @@ return baseclass.extend({
 
 			let logdataArrayLen = logdataArray.length;
 
-			if(logdataArrayLen > 0) {
+			if(logdataArray.length > 0) {
 				lines = [];
 				let firstNumLength = String(logdataArray[0][0]).length;
 				let lastNumLength  = String(logdataArray[logdataArrayLen - 1][0]).length;
@@ -55,13 +75,24 @@ return baseclass.extend({
 					if(e[5]) {
 						e[5] = `\t${e[5]}`;
 					};
-					lines.push(e.filter(i => (i)).join(' '));
+					lines.push(
+						`<span class="log-entry-line log-${e[4] || 'empty'}">` +
+						e.filter(i => (i)).join(' ') +
+						'</span>'
+					);
 				});
-				lines = lines.join('\n');
+				lines = lines.join('<br>');
 			};
 
-			logTextarea.value = lines;
-			logTextarea.rows  = (logdataArrayLen < this.rowsDefault) ? this.rowsDefault : logdataArrayLen;
+			try {
+				logArea.insertAdjacentHTML('beforeend', lines);
+			} catch(err) {
+				if(err.name === 'SyntaxError') {
+					ui.addNotification(null,
+						E('p', {}, _('HTML/XML error') + ': ' + err.message), 'error');
+				};
+				throw err;
+			};
 
 			let levelsStatString = '';
 			if((Object.values(this.logLevelsStat).reduce((s,c) => s + c, 0)) > 0) {
@@ -74,9 +105,9 @@ return baseclass.extend({
 
 			return E([
 				E('div', { 'class': 'log-entries-count' },
-					`${_('Entries')}: ${logdataArrayLen} / ${this.totalLogLines}${levelsStatString}`
+					`${_('Entries')}: ${logdataArray.length} / ${this.totalLogLines}${levelsStatString}`
 				),
-				logTextarea,
+				logArea,
 			]);
 		},
 	}),
