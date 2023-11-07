@@ -448,7 +448,7 @@ return baseclass.extend({
 						((e[3]) ? `<td class="td left" data-title="${_('Facility')}">${e[3]}</td>` : '') +
 						((e[4]) ? `<td class="td left" data-title="${_('Level')}">${e[4]}</td>` : '') +
 						((e[5]) ? `<td class="td left log-entry-message-cell" data-title="${_('Message')}">${e[5]}</td>` : '') +
-						`</tr>`
+						'</tr>'
 					);
 				});
 				lines = lines.join('');
@@ -458,8 +458,8 @@ return baseclass.extend({
 						E('th', { 'class': 'th left log-entry-number' }, '#'),
 						(logdataArray[0][1]) ? E('th', { 'class': 'th left log-entry-time' }, _('Timestamp')) : '',
 						(logdataArray[0][2]) ? E('th', { 'class': 'th left log-entry-host' }, _('Host')) : '',
-						(logdataArray[0][4]) ? E('th', { 'class': 'th left log-entry-facility' }, _('Facility')) : '',
-						(logdataArray[0][3]) ? E('th', { 'class': 'th left log-entry-log-level' }, _('Level')) : '',
+						(logdataArray[0][3]) ? E('th', { 'class': 'th left log-entry-facility' }, _('Facility')) : '',
+						(logdataArray[0][4]) ? E('th', { 'class': 'th left log-entry-log-level' }, _('Level')) : '',
 						(logdataArray[0][5]) ? E('th', { 'class': 'th left log-entry-message' }, _('Message')) : '',
 					])
 				);
