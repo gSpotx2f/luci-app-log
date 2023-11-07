@@ -443,7 +443,7 @@ return baseclass.extend({
 
 					lines.push(
 						`<tr class="tr log-${e[4] || 'empty'}"><td class="td left" data-title="#">${e[0]}</td>` +
-						((e[1]) ? `<td class="td left" data-title="${_('Timestamp')}"><span class="log-timestamp">${e[1]}</span></td>` : '') +
+						((e[1]) ? `<td class="td left" data-title="${_('Timestamp')}">${e[1]}</td>` : '') +
 						((e[2]) ? `<td class="td left log-entry-host-cell" data-title="${_('Host')}">${e[2]}</td>` : '') +
 						((e[3]) ? `<td class="td left" data-title="${_('Facility')}">${e[3]}</td>` : '') +
 						((e[4]) ? `<td class="td left" data-title="${_('Level')}">${e[4]}</td>` : '') +
