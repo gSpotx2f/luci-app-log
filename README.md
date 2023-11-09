@@ -56,7 +56,7 @@ System log (syslog-ng):
 ## Mod textarea (OpenWrt >= 21.02):
 
     wget --no-check-certificate -O /www/luci-static/resources/view/log/log-widget.js https://github.com/gSpotx2f/luci-app-log/raw/master/dev-mods-examples/mod-textarea/htdocs/luci-static/resources/view/log/log-widget.js
-    wget --no-check-certificate -O /www/luci-static/resources/view/log/log-widget.js https://github.com/gSpotx2f/luci-app-log/raw/master/dev-mods-examples/mod-textarea/htdocs/luci-static/resources/view/log/dmesg.js
-    wget --no-check-certificate -O /www/luci-static/resources/view/log/log-widget.js https://github.com/gSpotx2f/luci-app-log/raw/master/dev-mods-examples/mod-textarea/htdocs/luci-static/resources/view/log/syslog.js
+    wget --no-check-certificate -O /www/luci-static/resources/view/log/dmesg.js https://github.com/gSpotx2f/luci-app-log/raw/master/dev-mods-examples/mod-textarea/htdocs/luci-static/resources/view/log/dmesg.js
+    wget --no-check-certificate -O /www/luci-static/resources/view/log/syslog.js https://github.com/gSpotx2f/luci-app-log/raw/master/dev-mods-examples/mod-textarea/htdocs/luci-static/resources/view/log/syslog.js
 
 ![](https://github.com/gSpotx2f/luci-app-log/blob/master/dev-mods-examples/mod-textarea/screenshots/01.jpg)
