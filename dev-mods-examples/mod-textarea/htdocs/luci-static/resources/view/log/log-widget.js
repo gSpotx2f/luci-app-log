@@ -1,8 +1,7 @@
 'use strict';
 'require baseclass';
-'require fs';
 'require ui';
-'require view.log.abstract-log as abc';
+'require view.log.log-base as abc';
 
 return baseclass.extend({
 	view: abc.view.extend({

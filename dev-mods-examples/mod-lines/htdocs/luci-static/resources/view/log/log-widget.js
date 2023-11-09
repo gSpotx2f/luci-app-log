@@ -1,8 +1,7 @@
 'use strict';
 'require baseclass';
-'require fs';
 'require ui';
-'require view.log.abstract-log as abc';
+'require view.log.log-base as abc';
 
 document.head.append(E('style', {'type': 'text/css'},
 `
@@ -54,8 +53,9 @@ return baseclass.extend({
 		},
 
 		makeLogArea(logdataArray) {
-			let lines   = `<span class="log-entry-line center" style='width:100%'>${_('No entries available...')}</span>`;
-			let logArea = E('div', {'id': 'log-area'});
+			let lines   = `<span class="log-entry-line center" style="width:100%">${_('No entries available...')}</span>`;
+			let logArea = E('div', { 'id': 'log-area' });
+			//let logArea = E('div', { 'id': 'log-area', 'style': 'font-size:0.9em !important' });
 
 			for(let level of Object.keys(this.logLevels)) {
 				this.logLevelsStat[level] = 0;
@@ -73,15 +73,15 @@ return baseclass.extend({
 					};
 					e[0] = this.padNumber(e[0], firstNumLength, lastNumLength);
 					if(e[5]) {
-						e[5] = `\t${e[5]}`;
+						e[5] = `&#9;${e[5]}`;
 					};
 					lines.push(
 						`<span class="log-entry-line log-${e[4] || 'empty'}">` +
-						e.filter(i => (i)).join(' ') +
+						e.filter(i => (i)).join('&#160;') +
 						'</span>'
 					);
 				});
-				lines = lines.join('<br>');
+				lines = lines.join('<br />');
 			};
 
 			try {
@@ -90,6 +90,8 @@ return baseclass.extend({
 				if(err.name === 'SyntaxError') {
 					ui.addNotification(null,
 						E('p', {}, _('HTML/XML error') + ': ' + err.message), 'error');
+
+					console.log(lines);
 				};
 				throw err;
 			};

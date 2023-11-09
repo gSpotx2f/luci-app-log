@@ -2,7 +2,7 @@
 'require fs';
 'require rpc';
 'require ui';
-'require view.log.abstract-text as abc';
+'require view.log.log-widget as abc';
 
 return abc.view.extend({
 	viewName      : 'dmesg',
@@ -116,7 +116,7 @@ return abc.view.extend({
 				i + 1,                                          // #         (Number)
 				this.calcDmesgDate(Number(strArray[1].trim())), // Timestamp (String)
 				null,                                           // Host      (String)
-				this.facilityName[facility],                    // Facility  (String)
+				this.facilityName[ facility ],                  // Facility  (String)
 				level,                                          // Level     (String)
 				strArray.slice(2).join(' ').trim(),             // Message   (String)
 			];

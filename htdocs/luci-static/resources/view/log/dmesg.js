@@ -2,7 +2,7 @@
 'require fs';
 'require rpc';
 'require ui';
-'require view.log.abstract-log as abc';
+'require view.log.log-widget as abc';
 
 return abc.view.extend({
 	viewName      : 'dmesg',

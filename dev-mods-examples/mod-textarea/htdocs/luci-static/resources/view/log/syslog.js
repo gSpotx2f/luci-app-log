@@ -1,7 +1,7 @@
 'use strict';
 'require fs';
 'require ui';
-'require view.log.abstract-text as abc';
+'require view.log.log-widget as abc';
 
 return abc.view.extend({
 	viewName       : 'syslog',
