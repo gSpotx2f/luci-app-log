@@ -2,7 +2,7 @@
 'require baseclass';
 'require fs';
 'require ui';
-'require view.log.log-widget as abc';
+'require view.log-viewer.log-widget as abc';
 
 return baseclass.extend({
 	view: abc.view.extend({

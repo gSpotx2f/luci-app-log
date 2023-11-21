@@ -10,6 +10,9 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Critical"
 msgstr ""
 
@@ -17,6 +20,9 @@ msgid "Debug"
 msgstr ""
 
 msgid "Download log"
+msgstr ""
+
+msgid "Edit"
 msgstr ""
 
 msgid "Emergency"
@@ -32,6 +38,15 @@ msgid "Facility"
 msgstr ""
 
 msgid "Facilities"
+msgstr ""
+
+msgid "Filter settings"
+msgstr ""
+
+msgid "Get all entries"
+msgstr ""
+
+msgid "Get more entries"
 msgstr ""
 
 msgid "Host"
@@ -56,6 +71,9 @@ msgid "Level"
 msgstr ""
 
 msgid "Log"
+msgstr ""
+
+msgid "Log viewer"
 msgstr ""
 
 msgid "Logging levels"

@@ -1,7 +1,7 @@
 'use strict';
 'require baseclass';
 'require ui';
-'require view.log.log-base as abc';
+'require view.log-viewer.log-base as abc';
 
 document.head.append(E('style', {'type': 'text/css'},
 `
@@ -55,7 +55,6 @@ return baseclass.extend({
 		makeLogArea(logdataArray) {
 			let lines   = `<span class="log-entry-line center" style="width:100%">${_('No entries available...')}</span>`;
 			let logArea = E('div', { 'id': 'log-area' });
-			//let logArea = E('div', { 'id': 'log-area', 'style': 'font-size:0.9em !important' });
 
 			for(let level of Object.keys(this.logLevels)) {
 				this.logLevelsStat[level] = 0;

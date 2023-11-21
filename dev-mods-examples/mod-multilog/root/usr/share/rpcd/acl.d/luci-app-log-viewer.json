@@ -1,6 +1,6 @@
 {
-	"luci-app-log": {
-		"description": "Grant access to log procedures",
+	"luci-app-log-viewer": {
+		"description": "Grant access to log-viewer procedures",
 		"read": {
 			"cgi-io": [ "exec" ],
 			"file": {

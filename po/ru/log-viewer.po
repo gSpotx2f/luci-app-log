@@ -20,6 +20,9 @@ msgstr "Все"
 msgid "Apply"
 msgstr "Применить"
 
+msgid "Close"
+msgstr "Закрыть"
+
 msgid "Critical"
 msgstr "Критическая ситуация"
 
@@ -28,6 +31,9 @@ msgstr "Отладка"
 
 msgid "Download log"
 msgstr "Скачать лог"
+
+msgid "Edit"
+msgstr "Изменить"
 
 msgid "Emergency"
 msgstr "Чрезвычайная ситуация"
@@ -43,6 +49,15 @@ msgstr "Категория"
 
 msgid "Facilities"
 msgstr "Категории"
+
+msgid "Filter settings"
+msgstr "Настройки фильтра"
+
+msgid "Get all entries"
+msgstr "Все записи"
+
+msgid "Get more entries"
+msgstr "Больше записей"
 
 msgid "Host"
 msgstr "Хост"
@@ -67,6 +82,9 @@ msgstr "Уровень"
 
 msgid "Log"
 msgstr "Лог"
+
+msgid "Log viewer"
+msgstr "Просмотр лога"
 
 msgid "Logging levels"
 msgstr "Уровни логирования"
