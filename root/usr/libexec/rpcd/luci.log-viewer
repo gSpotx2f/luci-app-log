@@ -1,0 +1,44 @@
+#!/bin/sh
+
+. /lib/functions.sh
+. /usr/share/libubox/jshn.sh
+
+readonly LOGREAD_CMD="logread"
+readonly DMESG_CMD="dmesg"
+
+make_size_value() {
+	json_init
+	json_add_string 'bytes' "$1"
+	json_dump
+	json_cleanup
+}
+
+get_syslog_size() {
+	make_size_value "`$LOGREAD_CMD | wc -c`"
+}
+
+get_dmesg_size() {
+	make_size_value "`$DMESG_CMD | wc -c`"
+}
+
+case "$1" in
+	list)
+		json_init
+		json_add_object "getSyslogSize"
+		json_close_object
+		json_add_object "getDmesgSize"
+		json_close_object
+		json_dump
+		json_cleanup
+	;;
+	call)
+		case "$2" in
+			getSyslogSize)
+				get_syslog_size
+			;;
+			getDmesgSize)
+				get_dmesg_size
+			;;
+		esac
+	;;
+esac

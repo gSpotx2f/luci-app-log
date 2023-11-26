@@ -1,5 +1,6 @@
 'use strict';
 'require fs';
+'require rpc';
 'require ui';
 'require view.log-viewer.log-widget as abc';
 
@@ -13,6 +14,24 @@ return abc.view.extend({
 	isLoggerChecked: false,
 
 	entriesHandler : null,
+
+	lastBytes      : 0,
+
+	callLogSize: rpc.declare({
+		object: 'luci.log-viewer',
+		method: 'getSyslogSize',
+		expect: { '': {} }
+	}),
+
+	getLogSize() {
+		return this.callLogSize().then((data) => {
+			if(data.bytes) {
+				return Number(data.bytes);
+			} else {
+				throw new Error(_('An error occurred while trying to get the log size!'));
+			};
+		});
+	},
 
 	// logd
 	logdHandler(strArray, lineNum) {

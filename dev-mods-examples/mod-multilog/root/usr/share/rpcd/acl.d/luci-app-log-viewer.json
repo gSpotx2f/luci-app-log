@@ -12,6 +12,10 @@
 				"/var/log/maillog": [ "read" ],
 				"/var/log/cron": [ "read" ],
 				"/var/log/boot.log": [ "read" ]
+			},
+			"ubus": {
+				"system": [ "info" ],
+				"luci.log-viewer": [ "getLogdSize", "getDmesgSize" ]
 			}
 		}
 	}

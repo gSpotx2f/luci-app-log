@@ -7,7 +7,6 @@ return baseclass.extend({
 	view: abc.view.extend({
 		rowsDefault: 20,
 
-		//regexpFilterHighlightFunc: null,
 		regexpFilterHighlightFunc(match) {
 			return `►${match}◄`;
 		},
@@ -56,7 +55,7 @@ return baseclass.extend({
 					};
 					lines.push(e.filter(i => (i)).join(' '));
 				});
-				lines = lines.join('\n');
+				lines = lines.join('\r\n');
 			};
 
 			logTextarea.value = lines;

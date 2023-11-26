@@ -17,11 +17,14 @@ msgstr "Тревога"
 msgid "All"
 msgstr "Все"
 
+msgid "An error occurred while trying to get the log size!"
+msgstr "Произошла ошибка при попытке получить размер лога!"
+
 msgid "Apply"
 msgstr "Применить"
 
-msgid "Close"
-msgstr "Закрыть"
+msgid "Auto refresh"
+msgstr "Автообновление"
 
 msgid "Critical"
 msgstr "Критическая ситуация"
@@ -29,8 +32,11 @@ msgstr "Критическая ситуация"
 msgid "Debug"
 msgstr "Отладка"
 
+msgid "Dismiss"
+msgstr "Закрыть"
+
 msgid "Download log"
-msgstr "Скачать лог"
+msgstr "Скачать журнал"
 
 msgid "Edit"
 msgstr "Изменить"

@@ -1,12 +1,12 @@
 #
-# Copyright (C) 2021 gSpot (https://github.com/gSpotx2f/luci-app-log)
+# Copyright (C) 2023 gSpot (https://github.com/gSpotx2f/luci-app-log)
 #
 # This is free software, licensed under the MIT License.
 #
 
 include $(TOPDIR)/rules.mk
 
-PKG_VERSION:=1.0-0
+PKG_VERSION:=1.1-0
 LUCI_TITLE:=Advanced syslog and kernel log (tail, search, etc)
 LUCI_PKGARCH:=all
 PKG_LICENSE:=MIT

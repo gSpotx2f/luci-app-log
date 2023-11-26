@@ -50,10 +50,26 @@ return abc.view.extend({
 		12: 'Dec',
 	},
 
+	callLogSize: rpc.declare({
+		object: 'luci.log-viewer',
+		method: 'getDmesgSize',
+		expect: { '': {} }
+	}),
+
 	callSystemInfo: rpc.declare({
 		object: 'system',
 		method: 'info'
 	}),
+
+	getLogSize() {
+		return this.callLogSize().then((data) => {
+			if(data.bytes) {
+				return Number(data.bytes);
+			} else {
+				throw new Error(_('An error occurred while trying to get the log size!'));
+			};
+		});
+	},
 
 	calcDmesgDate(t) {
 		if(!this.localtime || !this.uptime) {

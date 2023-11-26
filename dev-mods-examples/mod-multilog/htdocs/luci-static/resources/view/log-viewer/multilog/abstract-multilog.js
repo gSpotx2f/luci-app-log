@@ -14,6 +14,16 @@ return baseclass.extend({
 
 		logFile        : null,
 
+		getLogSize() {
+			return fs.stat(this.logFile).then((data) => {
+				if(data.size) {
+					return data.size;
+				} else {
+					throw new Error(_('An error occurred while trying to get the log size!'));
+				};
+			});
+		},
+
 		// logd
 		logdHandler(strArray, lineNum) {
 			let logLevel = strArray[5].split('.');

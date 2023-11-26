@@ -9,7 +9,8 @@
 				"/bin/dmesg -r": [ "exec" ]
 			},
 			"ubus": {
-				"system": [ "info" ]
+				"system": [ "info" ],
+				"luci.log-viewer": [ "getSyslogSize", "getDmesgSize" ]
 			}
 		}
 	}
