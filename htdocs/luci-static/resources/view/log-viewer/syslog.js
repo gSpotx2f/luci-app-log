@@ -15,21 +15,23 @@ return abc.view.extend({
 
 	entriesHandler : null,
 
-	lastBytes      : 0,
-
-	callLogSize: rpc.declare({
+	logger         : null,
+/*
+	callLogHash: rpc.declare({
 		object: 'luci.log-viewer',
-		method: 'getSyslogSize',
+		method: 'getSyslogHash',
 		expect: { '': {} }
 	}),
 
-	getLogSize() {
-		return this.callLogSize().then((data) => {
-			if(data.bytes) {
-				return Number(data.bytes);
-			} else {
-				throw new Error(_('An error occurred while trying to get the log size!'));
-			};
+	getLogHash() {
+		return this.callLogHash().then(data => {
+			return (data.hash) ? data.hash : '';
+		});
+	},
+*/
+	getLogHash() {
+		return this.getLogData(1, true).then(data => {
+			return (data) ? data : '';
 		});
 	},
 
@@ -62,23 +64,34 @@ return abc.view.extend({
 		];
 	},
 
-	getLogData(tail) {
+	checkLogread() {
 		return Promise.all([
 			L.resolveDefault(fs.stat('/sbin/logread'), null),
 			L.resolveDefault(fs.stat('/usr/sbin/logread'), null),
 		]).then(stat => {
 			let logger = (stat[0]) ? stat[0].path : (stat[1]) ? stat[1].path : null;
-
 			if(logger) {
-				let loggerArgs = (tail) ? [ '-l', tail, '-e', '^' ] : [ '-e', '^' ];
-
-				return fs.exec_direct(logger, loggerArgs, 'text').catch(err => {
-					ui.addNotification(
-						null, E('p', {}, _('Unable to load log data:') + ' ' + err.message)
-					);
-					return '';
-				});
+				this.logger = logger;
+			} else {
+				throw new Error(_('Logread not found'));
 			};
+		});
+	},
+
+	async getLogData(tail, extraTstamp=false) {
+		if(!this.logger) {
+			await this.checkLogread();
+		};
+		let loggerArgs = [];
+		if(tail) {
+			loggerArgs.push('-l', String(tail));
+		};
+		loggerArgs.push('-e', '^');
+		if(extraTstamp) {
+			loggerArgs.push('-t');
+		};
+		return fs.exec_direct(this.logger, loggerArgs, 'text').catch(err => {
+			throw new Error(_('Unable to load log data:') + ' ' + err.message);
 		});
 	},
 
@@ -125,11 +138,7 @@ return abc.view.extend({
 		});
 
 		if(unsupportedLog) {
-			ui.addNotification(
-				null,
-				E('p', {}, _('Unable to load log data:') + ' ' + _('Unsupported log format'))
-			);
-			return [];
+			throw new Error(_('Unable to load log data:') + ' ' + _('Unsupported log format'));
 		} else {
 			if(this.logSortingValue === 'desc') {
 				entriesArray.reverse();

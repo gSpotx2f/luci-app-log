@@ -14,14 +14,10 @@ return baseclass.extend({
 
 		logFile        : null,
 
-		getLogSize() {
+		getLogHash() {
 			return fs.stat(this.logFile).then((data) => {
-				if(data.size) {
-					return data.size;
-				} else {
-					throw new Error(_('An error occurred while trying to get the log size!'));
-				};
-			});
+				return (data) ? data : '';
+			}).catch(e => {});
 		},
 
 		// logd
@@ -105,11 +101,7 @@ return baseclass.extend({
 			});
 
 			if(unsupportedLog) {
-				ui.addNotification(
-					null,
-					E('p', {}, _('Unable to load log data:') + ' ' + _('Unsupported log format'))
-				);
-				return [];
+				throw new Error(_('Unable to load log data:') + ' ' + _('Unsupported log format'));
 			} else {
 				if(this.logSortingValue === 'desc') {
 					entriesArray.reverse();

@@ -7,7 +7,11 @@ return baseclass.extend({
 	view: abc.view.extend({
 		rowsDefault: 20,
 
-		regexpFilterHighlightFunc(match) {
+		htmlEntities(str) {
+			return str;
+		},
+
+		filterHighlightFunc(match) {
 			return `►${match}◄`;
 		},
 

@@ -50,9 +50,9 @@ return abc.view.extend({
 		12: 'Dec',
 	},
 
-	callLogSize: rpc.declare({
+	callLogHash: rpc.declare({
 		object: 'luci.log-viewer',
-		method: 'getDmesgSize',
+		method: 'getDmesgHash',
 		expect: { '': {} }
 	}),
 
@@ -61,13 +61,9 @@ return abc.view.extend({
 		method: 'info'
 	}),
 
-	getLogSize() {
-		return this.callLogSize().then((data) => {
-			if(data.bytes) {
-				return Number(data.bytes);
-			} else {
-				throw new Error(_('An error occurred while trying to get the log size!'));
-			};
+	getLogHash() {
+		return this.callLogHash().then(data => {
+			return (data.hash) ? data.hash : '';
 		});
 	},
 
@@ -92,9 +88,8 @@ return abc.view.extend({
 			this.localtime = s.localtime;
 			this.uptime    = s.uptime;
 		}).catch(err => {});
-		return fs.exec_direct('/bin/dmesg', [ '-r' ]).catch(err => {
-			ui.addNotification(null, E('p', {}, _('Unable to load log data:') + ' ' + err.message));
-			return '';
+		return fs.exec_direct('/bin/dmesg', [ '-r' ], 'text').catch(err => {
+			throw new Error(_('Unable to load log data:') + ' ' + err.message);
 		});
 	},
 

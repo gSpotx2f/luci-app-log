@@ -7,10 +7,13 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-msgid "An error occurred while trying to get the log size!"
+msgid "Apply"
 msgstr ""
 
-msgid "Apply"
+msgid "Apply message filter as regular expression"
+msgstr ""
+
+msgid "Apply timestamp filter as regular expression"
 msgstr ""
 
 msgid "Auto refresh"
@@ -44,6 +47,9 @@ msgid "Facility"
 msgstr ""
 
 msgid "Facilities"
+msgstr ""
+
+msgid "Filter is regexp"
 msgstr ""
 
 msgid "Filter settings"
@@ -85,6 +91,9 @@ msgstr ""
 msgid "Logging levels"
 msgstr ""
 
+msgid "Logread not found"
+msgstr ""
+
 msgid "Message"
 msgstr ""
 
@@ -112,7 +121,7 @@ msgstr ""
 msgid "Timestamp filter"
 msgstr ""
 
-msgid "Type an expression..."
+msgid "Type a search pattern..."
 msgstr ""
 
 msgid "Unable to load log data:"

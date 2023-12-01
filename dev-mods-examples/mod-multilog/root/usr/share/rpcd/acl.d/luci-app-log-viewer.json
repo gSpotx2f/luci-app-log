@@ -15,7 +15,7 @@
 			},
 			"ubus": {
 				"system": [ "info" ],
-				"luci.log-viewer": [ "getLogdSize", "getDmesgSize" ]
+				"luci.log-viewer": [ "getSyslogSize", "getSyslogHash", "getDmesgSize", "getDmesgHash", "getLogfileSize" ]
 			}
 		}
 	}
