@@ -85,7 +85,7 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-msgid "Log viewer"
+msgid "Log Viewer"
 msgstr ""
 
 msgid "Logging levels"

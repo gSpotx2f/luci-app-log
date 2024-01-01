@@ -1,28 +1,28 @@
 {
-	"admin/services/log-viewer": {
-		"title": "Log viewer",
-		"order": 30,
+	"admin/status/log-viewer": {
+		"title": "Log Viewer",
+		"order": 5,
 		"action": {
 			"type": "alias",
-			"path": "admin/services/log-viewer/syslog"
+			"path": "admin/status/log-viewer/syslog"
 		},
 		"depends": {
 			"acl": [ "luci-app-log-viewer" ]
 		}
 	},
 
-	"admin/services/log-viewer/syslog": {
+	"admin/status/log-viewer/syslog": {
 		"title": "System Log",
-		"order": 10,
+		"order": 1,
 		"action": {
 			"type": "view",
 			"path": "log-viewer/syslog"
 		}
 	},
 
-	"admin/services/log-viewer/dmesg": {
+	"admin/status/log-viewer/dmesg": {
 		"title": "Kernel Log",
-		"order": 20,
+		"order": 2,
 		"action": {
 			"type": "view",
 			"path": "log-viewer/dmesg"
