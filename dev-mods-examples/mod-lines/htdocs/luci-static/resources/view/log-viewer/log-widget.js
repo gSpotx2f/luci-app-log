@@ -30,6 +30,8 @@ document.head.append(E('style', {'type': 'text/css'},
 	font-weight: normal;
 	/*font-size: 12px !important;*/
 	font-family: monospace !important;
+	word-break: break-all !important;
+	word-wrap: break-word !important;
 }
 `));
 

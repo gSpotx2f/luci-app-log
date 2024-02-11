@@ -32,6 +32,8 @@ document.head.append(E('style', {'type': 'text/css'},
 .log-entry-message-cell {
 	overflow-x: hidden !important;
 	text-overflow: ellipsis !important;
+	word-break: break-all !important;
+	word-wrap: break-word !important;
 }
 `));
 
