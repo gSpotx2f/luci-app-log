@@ -105,7 +105,7 @@ return abc.view.extend({
 		this.totalLogLines = strings.length;
 
 		let entriesArray   = strings.map((e, i) => {
-			let strArray   = e.split(/\s+/);
+			let strArray   = e.split(/\s/);
 
 			if(!this.isLoggerChecked) {
 				/**
