@@ -16,19 +16,7 @@ return abc.view.extend({
 	entriesHandler : null,
 
 	logger         : null,
-/*
-	callLogHash: rpc.declare({
-		object: 'luci.log-viewer',
-		method: 'getSyslogHash',
-		expect: { '': {} }
-	}),
 
-	getLogHash() {
-		return this.callLogHash().then(data => {
-			return (data.hash) ? data.hash : '';
-		});
-	},
-*/
 	getLogHash() {
 		return this.getLogData(1, true).then(data => {
 			return (data) ? data : '';
@@ -105,7 +93,7 @@ return abc.view.extend({
 		this.totalLogLines = strings.length;
 
 		let entriesArray   = strings.map((e, i) => {
-			let strArray   = e.split(/\s/);
+			let strArray   = e.split(/\s+/);
 
 			if(!this.isLoggerChecked) {
 				/**
