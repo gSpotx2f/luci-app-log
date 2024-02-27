@@ -14,12 +14,10 @@ document.head.append(E('style', {'type': 'text/css'},
 #log-area {
 	width: 100%;
 	height: 100%;
-	overflow: auto !important;
 	margin-bottom: 1em;
 }
 .log-entry-line {
 	display: inline-block;
-	white-space: pre-wrap;
 	text-indent: 8px;
 	margin: 0 0 1px 0;
 	padding: 0 4px;
@@ -30,8 +28,8 @@ document.head.append(E('style', {'type': 'text/css'},
 	font-weight: normal;
 	/*font-size: 12px !important;*/
 	font-family: monospace !important;
-	word-break: break-all !important;
-	word-wrap: break-word !important;
+	white-space: pre-wrap !important;
+	overflow-wrap: anywhere !important;
 }
 `));
 
@@ -78,7 +76,7 @@ return baseclass.extend({
 					};
 					lines.push(
 						`<span class="log-entry-line log-${e[4] || 'empty'}">` +
-						e.filter(i => (i)).join('&#160;') +
+						e.filter(i => (i)).join(' ') +
 						'</span>'
 					);
 				});
