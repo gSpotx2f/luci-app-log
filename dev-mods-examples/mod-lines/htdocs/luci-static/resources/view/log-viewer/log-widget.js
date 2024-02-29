@@ -89,8 +89,6 @@ return baseclass.extend({
 				if(err.name === 'SyntaxError') {
 					ui.addNotification(null,
 						E('p', {}, _('HTML/XML error') + ': ' + err.message), 'error');
-
-					console.log(lines);
 				};
 				throw err;
 			};
