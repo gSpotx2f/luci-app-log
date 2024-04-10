@@ -8,7 +8,7 @@ return abc.view.extend({
 
 	title          : _('System Log'),
 
-	logdRegexp     : new RegExp(/^([^\s]{3}\s+[^\s]{3}\s+\d{1,2}\s+\d{1,2}:\d{1,2}:\d{1,2}\s+\d{4})\s+([a-z]+)\.([a-z]+)\s+(.*)$/),
+	logdRegexp     : new RegExp(/^([^\s]{3}\s+[^\s]{3}\s+\d{1,2}\s+\d{1,2}:\d{1,2}:\d{1,2}\s+\d{4})\s+([a-z0-9]+)\.([a-z]+)\s+(.*)$/),
 
 	syslog_ngRegexp: new RegExp(/^([^\s]{3}\s+\d{1,2}\s+\d{1,2}:\d{1,2}:\d{1,2})\s+([^\s]+)\s+(.*)$/),
 
