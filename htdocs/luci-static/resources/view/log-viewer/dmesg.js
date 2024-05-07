@@ -2,12 +2,14 @@
 'require fs';
 'require rpc';
 'require ui';
-'require view.log-viewer.log-widget as abc';
+'require view.log-viewer.log-widget as widget';
 
-return abc.view.extend({
+return widget.view.extend({
 	viewName      : 'dmesg',
 
 	title         : _('Kernel Log'),
+
+	autoRefresh   : true,
 
 	entryRegexp   : new RegExp(/^<(\d{1,2})>\[([\d\s.]+)\]\s+(.*)$/),
 

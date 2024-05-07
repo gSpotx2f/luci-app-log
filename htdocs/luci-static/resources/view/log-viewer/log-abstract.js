@@ -2,11 +2,24 @@
 'require baseclass';
 'require fs';
 'require ui';
-'require view.log-viewer.log-widget as abc';
+'require view.log-viewer.log-widget as widget';
 
 return baseclass.extend({
-	view: abc.view.extend({
-		testRegexp     : new RegExp(/([0-9]{2}:){2}[0-9]{2}/),
+	view: widget.view.extend({
+		/**
+		 * Pattern for picking application-specific entries from the log.
+		 *
+		 * @property {string} appPattern
+		 */
+		appPattern     : '^',
+
+		/**
+		 * Enable "tail" option for the logread (logread -l).
+		 * Must be disabled for application-specific log.
+		 *
+		 * @property {bool} loggerTail
+		 */
+		loggerTail     : false,
 
 		logdRegexp     : new RegExp(/^([^\s]{3}\s+[^\s]{3}\s+\d{1,2}\s+\d{1,2}:\d{1,2}:\d{1,2}\s+\d{4})\s+([a-z0-9]+)\.([a-z]+)\s+(.*)$/),
 
@@ -18,12 +31,12 @@ return baseclass.extend({
 
 		entriesHandler : null,
 
-		logFile        : null,
+		logger         : null,
 
 		getLogHash() {
-			return fs.stat(this.logFile).then((data) => {
+			return this.getLogData(1, true).then(data => {
 				return data || '';
-			}).catch(e => {});
+			});
 		},
 
 		// logd
@@ -53,8 +66,35 @@ return baseclass.extend({
 			];
 		},
 
-		getLogData(tail) {
-			return L.resolveDefault(fs.read_direct(this.logFile, 'text'), '');
+		checkLogread() {
+			return Promise.all([
+				L.resolveDefault(fs.stat('/sbin/logread'), null),
+				L.resolveDefault(fs.stat('/usr/sbin/logread'), null),
+			]).then(stat => {
+				let logger = (stat[0]) ? stat[0].path : (stat[1]) ? stat[1].path : null;
+				if(logger) {
+					this.logger = logger;
+				} else {
+					throw new Error(_('Logread not found'));
+				};
+			});
+		},
+
+		async getLogData(tail, extraTstamp=false) {
+			if(!this.logger) {
+				await this.checkLogread();
+			};
+			let loggerArgs = [];
+			if(this.loggerTail && tail) {
+				loggerArgs.push('-l', String(tail));
+			};
+			loggerArgs.push('-e', this.appPattern);
+			if(extraTstamp) {
+				loggerArgs.push('-t');
+			};
+			return fs.exec_direct(this.logger, loggerArgs, 'text').catch(err => {
+				throw new Error(_('Unable to load log data:') + ' ' + err.message);
+			});
 		},
 
 		parseLogData(logdata, tail) {
@@ -65,7 +105,7 @@ return baseclass.extend({
 			let unsupportedLog = false;
 			let strings        = logdata.trim().split(/\n/);
 
-			if(tail && tail > 0 && strings) {
+			if(!this.loggerTail && tail && tail > 0 && strings) {
 				strings = strings.slice(-tail);
 			};
 

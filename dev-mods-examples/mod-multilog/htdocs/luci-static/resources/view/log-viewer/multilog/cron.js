@@ -1,8 +1,9 @@
 'use strict';
-'require view.log-viewer.multilog.abstract-multilog as abc';
+'require view.log-viewer.multilog.multilog-abstract as abc';
 
 return abc.view.extend({
-	viewName: 'multilog-cron',
-	title   : _('Log') + ' - ' + _('cron'),
-	logFile : '/var/log/cron',
+	viewName   : 'multilog-cron',
+	title      : _('Log') + ' - ' + _('cron'),
+	autoRefresh: false,
+	logFile    : '/var/log/cron',
 });
