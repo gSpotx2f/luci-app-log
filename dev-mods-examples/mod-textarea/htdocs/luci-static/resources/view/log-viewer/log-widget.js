@@ -1,10 +1,10 @@
 'use strict';
 'require baseclass';
 'require ui';
-'require view.log-viewer.log-base as abc';
+'require view.log-viewer.log-base as base';
 
 return baseclass.extend({
-	view: abc.view.extend({
+	view: base.view.extend({
 		rowsDefault: 20,
 
 		htmlEntities(str) {
