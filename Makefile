@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2025 gSpot (https://github.com/gSpotx2f/luci-app-log)
+# Copyright (C) 2026 gSpot (https://github.com/gSpotx2f/luci-app-log)
 #
 # This is free software, licensed under the MIT License.
 #
@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-log-viewer
 PKG_VERSION:=1.5.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 LUCI_TITLE:=Advanced syslog and kernel log (tail, search, etc)
 LUCI_DEPENDS:=+ucode +ucode-mod-fs
 LUCI_PKGARCH:=all
