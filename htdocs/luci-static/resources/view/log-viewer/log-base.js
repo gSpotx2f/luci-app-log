@@ -302,12 +302,15 @@ return baseclass.extend({
 		actionButtons        : [],
 
 		htmlEntities(str) {
+			/*
 			return String(str).replace(
 				/&/g, '&#38;').replace(
 				/</g, '&#60;').replace(
 				/>/g, '&#62;').replace(
 				/"/g, '&#34;').replace(
 				/'/g, '&#39;');
+			*/
+			return str;
 		},
 
 		checkZeroValue(value) {
