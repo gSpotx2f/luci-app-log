@@ -724,7 +724,7 @@ return baseclass.extend({
 			if(!fPattern) {
 				return entriesArray;
 			};
-			fPattern = this.htmlEntities(fPattern);
+			//fPattern = this.htmlEntities(fPattern);
 			return (this.msgFilterReValue) ?
 				this.setRegexpFilter(entriesArray, 5, fPattern) :
 					this.setStringFilter(entriesArray, 5, fPattern);
