@@ -6,7 +6,8 @@
 			"file": {
 				"/sbin/logread*": [ "exec" ],
 				"/usr/sbin/logread*": [ "exec" ],
-				"/bin/dmesg -r": [ "exec" ]
+				"/bin/dmesg -r": [ "exec" ],
+				"/usr/libexec/logread-ubox*": [ "exec" ]
 			},
 			"ubus": {
 				"system": [ "info" ],
