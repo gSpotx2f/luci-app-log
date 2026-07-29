@@ -6,6 +6,7 @@
 			"file": {
 				"/sbin/logread*": [ "exec" ],
 				"/usr/sbin/logread*": [ "exec" ],
+				"/usr/libexec/logread-ubox*": [ "exec" ],
 				"/bin/dmesg -r": [ "exec" ],
 				"/var/log/messages": [ "read" ],
 				"/var/log/secure": [ "read" ],
