@@ -772,7 +772,9 @@ return baseclass.extend({
 				URL.revokeObjectURL(link.href);
 			}).catch(err => {
 				ui.addNotification(null,
-					E('p', {}, _('Download error') + ': ' + err.message));
+					E('p', {}, _('Download error') + ': ' + err.message),
+					'warning'
+				);
 			}).finally(() => {
 				this.enableFormElems();
 			});
